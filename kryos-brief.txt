@@ -1,0 +1,316 @@
+==============================================================
+SITE: KRYOS Studios
+==============================================================
+
+ROLE / CONTEXT
+--------------
+Role: You are Creative Director for a prestige independent games studio.
+Context: KRYOS is a ten-person Vancouver studio that builds real-time,
+persistent worlds — games that track player choices across seasons, lobbies,
+and lifetimes. The studio ships cinematic single-player and small-multiplayer
+titles under the tagline "Worlds that remember you." You have commissioned
+a senior interaction designer to rebuild the KRYOS marketing site as an
+immersive, editorial experience that feels like a game HUD meets art-house
+cinema.
+
+BUILD STACK
+-----------
+1. Stitch (layout generation)
+2. UI UX Pro Max (style / palette / typography selection)
+3. Firecrawl (reference scrape)
+4. Magic / 21st.dev (hero and feature blocks)
+5. Nano Banana 2 (hero + studio imagery)
+6. Brand skill (voice + messaging)
+7. Design skill (logo, icons, OG image)
+8. Design System skill (token architecture)
+9. UI Styling skill (interactive components)
+
+
+PURPOSE
+-------
+Studio marketing site — showcase games, communicate the "worlds that
+remember you" philosophy, attract players to active titles, and recruit
+senior engineers and narrative designers.
+
+
+==============================================================
+STEP 2 — BRAND VOICE (for `brand` skill)
+==============================================================
+
+Voice archetype: The Architect-Oracle — precise, understated authority.
+Speaks like a lead systems designer who has shipped fifty titles and chooses
+every word deliberately. No hype, no corporate speak. Technology as poetry.
+
+Tone dimensions (scale 1–5):
+- Formal ↔ Casual:        3 (technical clarity with a quiet warmth)
+- Serious ↔ Playful:      2 (serious, with rare dry wit)
+- Reserved ↔ Expressive:  2 (reserved — impact through restraint)
+- Modern ↔ Timeless:      3 (forward-looking, grounded in craft)
+
+Voice rules:
+- Systems language is earned: "persistent state," "memory architecture,"
+  "seasonal graph," "real-time trace." Max 2 per paragraph.
+- Active verbs over adjectives: "ships," "watches," "remembers," "tracks."
+- Second person sparingly — "your choices," "your world" on CTAs only.
+- Never: "cutting-edge," "innovative," "best-in-class," "next-gen" (cliché),
+  "gamers" (use "players"), "AAA" (KRYOS is proudly independent).
+
+Words to use:   persistent, remember, trace, season, signal, world, craft,
+                silence, weight, depth, architecture, studio, shipped
+Words to avoid: cutting-edge, innovative, gamers, AAA, next-gen, epic,
+                amazing, journey, ecosystem, synergy
+
+Messaging framework:
+- Tagline (≤7 words):        "Worlds that remember you."
+- Value prop (≤20 words):    "A ten-person studio building real-time
+                              persistent worlds that track every choice
+                              across seasons and lifetimes."
+- Key phrases (3–5):          "Systems that watch back,"
+                              "Your choices, permanently encoded,"
+                              "Real-time cinema," "Shipped, not promised,"
+                              "Ten thousand hours of craft"
+
+
+==============================================================
+STEP 3 — DESIGN SYSTEM (for `ui-ux-pro-max` + `design-system`)
+==============================================================
+
+Style keywords:   dark, editorial, cinematic, technical, minimal, high-contrast,
+                  sci-fi HUD, brutalist grid, monochromatic with single accent
+
+Preferred style direction: editorial brutalism meets game HUD — stark near-black
+surfaces, monospaced type as UI chrome, a single electric lime accent that
+pulses against near-black. Zero decorative gradients; depth through
+typography weight and whitespace only.
+
+COLOR SYSTEM:
+- Background:      near-black #050508
+- Surface-raised:  deep ink #0a0a12
+- Ink (primary):   ice white #f0f0f5
+- Ink-dim:         muted #a8a8b8
+- Ink-ghost:       #505060
+- Accent (lime):   electric lime #d7ff3a — used sparingly on one element per section
+- Accent-hover:    #c0ff00
+- Warning:         hot red #ff4d50
+- Info:            ice blue #5cd6ff
+- Line:            rgba(240,240,245,.08) — hairline borders only
+- Glass:           rgba(10,10,18,.55) with backdrop-filter blur 16px
+
+Contrast requirement: WCAG AA on all body copy (ink on bg), AAA preferred.
+
+TYPOGRAPHY:
+- Display:     Archivo Black — ultra-compressed, uppercase, tracking -.04em
+- Body:        Space Grotesk 300–500 — humanist, wide x-height, high legibility
+- Monospace:   JetBrains Mono — for timestamps, stats, HUD labels, code
+- Type scale:  fluid clamp() from mobile to 1440px desktop
+  Display: clamp(48px, 11vw, 180px) — hero only
+  H2:      clamp(22px, 2.2vw, 40px)
+  Body:    16px / line-height 1.6
+  Mono UI: 10–11px / letter-spacing .18–.25em / uppercase
+
+SPACING & LAYOUT:
+- Spacing scale (4px base): 4, 8, 12, 16, 24, 32, 48, 64, 96, 128
+- Container max-width: 1280px, edge padding 60px desktop / 24px mobile
+- Grid: 12-col desktop, 4-col mobile
+- Section vertical rhythm: 128px desktop / 80px mobile
+
+RADII:
+- Buttons: 0px (hard-edged, per editorial brutalism)
+- Cards: 0px outer / 2px inner image crop
+- Tags/badges: 2px
+
+ELEVATION: none — depth through color and border only (no box-shadows)
+
+MOTION LANGUAGE:
+- Easing:    cubic-bezier(.2,.9,.25,1) for entrances (over-settle)
+- Durations: micro 150ms, standard 300ms, expressive 600ms, hero title 1s
+- Hero:      each word slides up from clip (translateY 110%→0, 1s per word,
+             120ms stagger) — Archivo Black, near-black canvas, lime underline
+             draws across after last word
+- Scroll:    IntersectionObserver threshold 0.15, translateY 24px→0 + opacity 0→1
+- Hover:     links get lime ::after underline drawing left→right, 300ms
+- Marquee:   horizontal scrolling ticker, 40s linear infinite
+- Boot sequence overlay: monospace log lines, lime progress bar,
+             then opacity-fade out — duration 2.2s total
+- prefers-reduced-motion: collapse all transform to opacity-only at 200ms
+
+
+==============================================================
+STEP 4 — REFERENCE SCRAPE (for Firecrawl)
+==============================================================
+Reference URL: https://www.klei.com/
+
+Borrow: minimal editorial grid, game-first hero, clean section rhythm.
+Avoid: any warm palette choices, rounded aesthetics, or marketing fluff
+that conflicts with the KRYOS voice.
+
+
+==============================================================
+STEP 5 — SECTIONS & LAYOUT (for Stitch)
+==============================================================
+Section order and goal:
+
+1. Boot Overlay    — fullscreen black, monospace boot log lines, lime progress
+                     bar, KRYOS logo fades in, then overlay fades out (~2.2s)
+2. Navbar          — fixed, mix-blend-mode difference, logo left + nav links
+                     right (monospace, uppercase, .2em tracking), single CTA
+                     "Press Start" button (hard-edged, lime border)
+3. Hero            — full viewport, WebGL particle field (Three.js) behind,
+                     massive KRYOS word-by-word slide-up, tagline, two CTAs
+                     ("Enter Archive" / "Meet the Studio"), 4 HUD stat counters
+4. Manifesto       — 2-col: left column scrolling stats (48 titles, years,
+                     players), right column 3-paragraph studio philosophy
+5. Works / Archive — masonry grid of 6 game cards (Project Halcyon, Nightfold,
+                     Blueshift, Paraline, Echo//Form, The Long Run), each with
+                     cover image, monospace game ID, title, one-line description,
+                     status tag (LIVE / SHIPPED / UPCOMING), hover: image zoom
+                     1.05 + lime border flash
+6. Marquee ticker  — full-width scrolling tape: "Press Start ◆ Worlds That
+                     Remember ◆ Ten Thousand Hours ◆ KRYOS® ◆ Real-Time Cinema"
+7. Engine / Tech   — 3-col feature grid: Memory Architecture, Seasonal State,
+                     Real-Time Trace — each with monospace icon, stat, one-liner
+8. Log / News      — vertical timeline of 5 studio updates (Halcyon Season 2,
+                     Edge Magazine feature, plume-audio open-source, hiring,
+                     IGF award), each entry: date tag + headline + one-liner
+9. Contact         — single-col centered: "Signal Acquired" headline, email
+                     link, social links (X, Discord, GitHub), hiring CTA
+10. Footer         — copyright line, registry tagline "All worlds held under
+                     registry", monospace legal
+
+Hero 21st.dev prompt:
+  "A dark cinematic hero section for a game studio — massive editorial
+   headline with per-word slide-up animation, electric lime accent line,
+   WebGL particle field background, four HUD data counters, and two
+   hard-edged CTA buttons. Monospace type for labels. Near-black surface."
+
+
+==============================================================
+STEP 6 — IMAGERY (for Nano Banana 2)
+==============================================================
+Global art direction: cinematic game screenshot aesthetic, desaturated near-
+monochrome with single electric lime or ice blue accent hit per image, shallow
+DoF, 16mm film grain texture, no text in images, no logos.
+
+Aspect ratios:
+- Hero:     16:9 (2560×1440)
+- Game card: 16:9 (1280×720 per card)
+- Studio:   4:3
+- OG/social: 1200×630
+
+Per-image prompts:
+- Hero         — vast alien biome at golden hour: crystalline terrain, lone
+                 player silhouette in mid-distance, electric lime particle
+                 horizon glow, atmospheric haze, hyperrealistic game render
+- Halcyon      — dense jungle canopy biome, soft bioluminescent lighting,
+                 player base structure integrated into ancient ruins, lime
+                 accent lighting on tech elements
+- Nightfold    — noir city at 3am, rain-slick streets, lone figure under
+                 a streetlamp, deep blue-black palette, single neon sliver
+- Blueshift    — deep space cockpit interior, star field through curved
+                 viewport, instrument glow, cold blue-white atmosphere
+- Paraline     — brutalist concrete megastructure interior, god-rays from
+                 overhead vents, two silhouettes in conversation, stark
+                 monochrome with lime emergency lighting
+- Echo//Form   — abstract generative soundscape visualization: layered wave
+                 forms in 3D, ice blue frequency peaks, near-black void
+- The Long Run — windswept coastal cliffside, overcast light, lone runner
+                 figure tiny against the horizon, muted earth tones
+- Studio about — overhead editorial photo of a small studio desk: dual
+                 monitors showing game renders, mechanical keyboard, lime-
+                 accented peripherals, coffee cup, intentionally sparse
+
+
+==============================================================
+STEP 7 — BRAND ASSETS (for `design` skill)
+==============================================================
+
+LOGO brief:
+- Concept:    stark wordmark "KRYOS" in Archivo Black, no letterforms altered,
+              with a hairline frost-crystal monogram "K" for icon-only use.
+- Variant:    primary (wordmark), icon-only (K monogram), inverse (on lime).
+- Export:     SVG (primary), PNG @2x, favicon 32/48/180px.
+
+ICON SET (SVG, 1.5px stroke, square caps, zero radius — matches editorial
+brutalism):
+- archive       (Works section)
+- cpu           (Engine/Tech)
+- terminal      (Log)
+- signal-dot    (Contact)
+- eye           (Memory Architecture)
+- loop-arrow    (Seasonal State)
+- trace-path    (Real-Time Trace)
+- star-outlined (achievements/press)
+- chevron-right (CTA arrow)
+
+OG / SOCIAL CARD (1200×630):
+- Near-black background, KRYOS wordmark top-left in white, tagline centered
+  in Space Grotesk 300, hero game image fills right 55% with a hard vertical
+  edge (no soft fade), lime accent stripe 2px along bottom edge.
+
+
+==============================================================
+STEP 8 — INTERACTIVE COMPONENTS (for `ui-styling` / shadcn)
+==============================================================
+
+Required components:
+- Game card grid (Works) — hover: scale 1.02, lime border 1px, status badge
+- Stats counter (Manifesto) — countUp animation on IntersectionObserver enter
+- Log / timeline — vertical line connector, date badges, staggered reveal
+- Contact form — minimal: name + email + message + topic select, validation
+- Boot overlay — timed sequence: log lines appear one by one (CSS animation),
+  progress bar fills, then overlay fades; must honor prefers-reduced-motion
+  (skip sequence, show logo, fade immediately)
+- Custom crosshair cursor — 20px crosshair SVG, mix-blend-mode difference,
+  lime dot center; enlarges to 56px on interactive elements; hidden on touch
+
+Interaction states on all interactive elements:
+default, hover (lime underline/border), active (lime fill), focus-visible
+(2px lime ring, 2px offset), disabled (opacity .35).
+
+
+==============================================================
+STEP 9 — ASSEMBLE & ANIMATE (final index.html)
+==============================================================
+
+RESPONSIVE BREAKPOINTS: 640 (sm), 1024 (lg), 1280 (xl). Mobile-first.
+On mobile: cursor hidden, boot overlay shortened to 1.2s, hero font scaled
+via clamp(), game grid 1-col → 2-col at sm → 3-col at lg.
+
+PERFORMANCE BUDGET:
+- LCP < 2.5s
+- CLS < 0.05
+- Three.js particle field deferred until after boot overlay completes
+- Game card images: loading="lazy", decoding="async"
+- WebGL canvas hidden and replaced with static gradient on low-power devices
+  (prefers-reduced-motion OR navigator.hardwareConcurrency ≤ 4)
+
+SEO / META:
+- <title>KRYOS — Worlds that remember you</title>
+- meta description: "A ten-person studio building real-time persistent worlds
+  that track every choice across seasons and lifetimes." (≤155 chars)
+- OG tags + Twitter card: summary_large_image
+- JSON-LD: Organization schema with sameAs links to X, Discord, GitHub
+
+ACCESSIBILITY:
+- Skip-to-content link (first focusable element)
+- Boot overlay: aria-live="polite" for log lines, aria-hidden after complete
+- All game card images: alt text from per-image prompts above
+- Custom cursor: fully hidden when prefers-reduced-motion; body falls back
+  to cursor:auto
+- Focus-visible: 2px lime ring on all interactive elements
+
+ANIMATION ON ASSEMBLY:
+- Boot overlay:     log lines fade+slide-in one by one (stagger 120ms),
+                    progress bar grows 0→100% over 1.4s, KRYOS logo opacity
+                    0→1 at 1.6s, overlay opacity 0 at 2.2s
+- Hero title:       per-word translateY 110%→0, cubic-bezier(.2,.9,.25,1),
+                    1s per word, 120ms stagger — Archivo Black
+- Lime underline:   scaleX 0→1 after last word, 600ms, transform-origin left
+- Manifesto stats:  countUp on IntersectionObserver enter, 1.2s ease-out
+- Section reveals:  translateY 24px→0 + opacity 0→1, threshold 0.15, once
+- Game card hover:  scale 1.02, lime 1px border, image brighten 1.05, 200ms
+- Marquee:          translateX 0→-50%, linear 40s infinite; pauses on hover
+- Log entries:      stagger 80ms on reveal, slide from left 12px
+
+OUTPUT FILE: index.html (overwrite if exists — this is the rebuild)
+SIDECAR:     build-report.json (same directory)

@@ -1,0 +1,72 @@
+{
+  "pipeline": "/animated-website (rebuild)",
+  "generatedAt": "2026-04-18T00:00:00Z",
+  "briefSource": "arguments",
+  "mode": "rebuild — cyberpunk aesthetic transformation",
+  "mcp": {
+    "stitch": "skipped",
+    "firecrawl": "skipped",
+    "magic": "skipped"
+  },
+  "skills": {
+    "brand": "skipped (voice locked from original build)",
+    "ui-ux-pro-max": "skipped (palette provided in brief)",
+    "design-system": "fired (token swap to cyberpunk palette)",
+    "design": "skipped (assets preserved from original)",
+    "ui-styling": "fired (cyberpunk visual effects layer)",
+    "nano-banana-2": "skipped (user generating images manually via Gemini Pro)"
+  },
+  "images": {
+    "showcase-1-world-overview": "tier-3 (CSS gradient placeholder)",
+    "showcase-2-persistent-engine": "tier-3 (CSS gradient placeholder)",
+    "showcase-3-halcyon-key-art": "tier-3 (CSS gradient placeholder)",
+    "showcase-4-nightfold": "tier-3 (CSS gradient placeholder)",
+    "showcase-5-studio": "tier-3 (CSS gradient placeholder)",
+    "showcase-6-signal-tower": "tier-3 (CSS gradient placeholder)"
+  },
+  "colorPalette": {
+    "primary-accent": "#FF2A6D (neon magenta)",
+    "secondary-accent": "#05D9E8 (electric cyan)",
+    "tertiary": "#9B5DE5 (violet)",
+    "background": "#0D0221 (ultra-dark navy)",
+    "surface": "#1A1A2E",
+    "ink": "#D1F7FF (ice cyan white)",
+    "ink-dim": "#7B8794",
+    "warning": "#FF6B35 (neon orange)"
+  },
+  "cyberpunkFeatures": [
+    "Glitch effects on hero title (CSS clip-path animation with color channel offset)",
+    "Neon glow on all accent elements (multi-layer box-shadow)",
+    "Enhanced CRT scanlines (opacity .08)",
+    "Circuit board grid overlay (CSS)",
+    "Animated background grid with shift animation",
+    "Digital rain (katakana characters, CSS animation)",
+    "Neon flickering logo animation",
+    "Holographic rainbow gradient on game card hover",
+    "Neon dividers with pulse animation",
+    "Cyber banners with katakana decorations",
+    "Chromatic aberration glitch on hero text",
+    "Stronger CRT vignette",
+    "WebGL orb with magenta/cyan dual-accent shader",
+    "Wireframe shell with neon pulse opacity",
+    "Ring colors: magenta + cyan",
+    "Purple-tinted scene fog",
+    "6 full-bleed showcase image sections with parallax"
+  ],
+  "showcaseImagePrompts": 6,
+  "preservedFeatures": [
+    "All original content/copy",
+    "Boot sequence",
+    "Custom crosshair cursor",
+    "HUD overlays with live data",
+    "3D tilt on game cards",
+    "Achievement toasts",
+    "WebGL Three.js hero scene",
+    "Counter animations",
+    "Word-by-word manifesto reveal",
+    "Marquee tickers",
+    "Cinematic letterbox transitions",
+    "Responsive breakpoints",
+    "prefers-reduced-motion support"
+  ]
+}

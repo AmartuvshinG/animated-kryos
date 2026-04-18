@@ -1,0 +1,1376 @@
+<!-- build-provenance
+  pipeline: /animated-website (rebuild)
+  generated-at: 2026-04-18T00:00:00Z
+  brief-source: arguments
+  mcp:
+    stitch: skipped (rebuild — existing layout preserved)
+    firecrawl: skipped (rebuild — no reference scrape needed)
+    magic: skipped (rebuild — existing components preserved)
+  skills:
+    brand: skipped (rebuild — voice already locked)
+    ui-ux-pro-max: skipped (rebuild — palette provided in brief)
+    design-system: fired (token swap to cyberpunk palette)
+    design: skipped (rebuild — assets preserved)
+    ui-styling: fired (cyberpunk visual effects layer)
+    nano-banana-2: skipped (user will generate images manually)
+  images:
+    showcase-1-world-overview: tier-3 (CSS gradient placeholder)
+    showcase-2-persistent-engine: tier-3 (CSS gradient placeholder)
+    showcase-3-halcyon-key-art: tier-3 (CSS gradient placeholder)
+    showcase-4-nightfold: tier-3 (CSS gradient placeholder)
+    showcase-5-studio: tier-3 (CSS gradient placeholder)
+    showcase-6-signal-tower: tier-3 (CSS gradient placeholder)
+-->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>KRYOS — Worlds that remember you</title>
+<meta name="description" content="KRYOS is a game studio building cinematic, persistent worlds. We design systems that remember the player."/>
+<meta property="og:title" content="KRYOS — Worlds that remember you"/>
+<meta property="og:description" content="A ten-person studio building real-time persistent worlds that track every choice across seasons and lifetimes."/>
+<meta property="og:type" content="website"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&family=Archivo+Black&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<style>
+/* ═══════════════════════════════════════════════════════
+   KRYOS — Cyberpunk Token Architecture
+   Palette: Neon Magenta / Electric Cyan / Violet
+   ═══════════════════════════════════════════════════════ */
+:root{
+  --bg:#0D0221;
+  --bg2:#1A1A2E;
+  --ink:#D1F7FF;
+  --ink-dim:#7B8794;
+  --ink-ghost:#3A4550;
+  --line:rgba(5,217,232,.1);
+  --line-b:rgba(5,217,232,.22);
+  --acc:#FF2A6D;
+  --acc-b:#FF0055;
+  --acc2:#05D9E8;
+  --acc3:#9B5DE5;
+  --warn:#FF6B35;
+  --info:#05D9E8;
+  --glass:rgba(13,2,33,.7);
+  --edge:1px solid rgba(5,217,232,.12);
+  --neon-mag:0 0 7px #FF2A6D,0 0 20px rgba(255,42,109,.4),0 0 45px rgba(255,42,109,.15);
+  --neon-cyan:0 0 7px #05D9E8,0 0 20px rgba(5,217,232,.4),0 0 45px rgba(5,217,232,.15);
+  --neon-vio:0 0 7px #9B5DE5,0 0 20px rgba(155,93,229,.4),0 0 45px rgba(155,93,229,.15);
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-font-smoothing:antialiased}
+html,body{background:var(--bg);color:var(--ink);font-family:'Space Grotesk',system-ui,sans-serif;overflow-x:hidden}
+html{scroll-behavior:smooth}
+body{min-height:100vh;cursor:none}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+::selection{background:var(--acc);color:#fff}
+
+/* ── Custom cursor ── */
+#cursor{position:fixed;top:0;left:0;width:20px;height:20px;pointer-events:none;z-index:9999;mix-blend-mode:difference;transform:translate(-50%,-50%);transition:width .25s,height .25s}
+#cursor::before,#cursor::after{content:'';position:absolute;background:var(--ink)}
+#cursor::before{left:50%;top:0;width:1px;height:100%;transform:translateX(-50%)}
+#cursor::after{top:50%;left:0;height:1px;width:100%;transform:translateY(-50%)}
+#cursor-dot{position:fixed;top:0;left:0;width:6px;height:6px;border-radius:50%;background:var(--acc);pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:transform .12s ease-out;box-shadow:var(--neon-mag)}
+#cursor.hot{width:56px;height:56px;mix-blend-mode:normal}
+#cursor.hot::before,#cursor.hot::after{background:var(--acc)}
+@media(hover:none){body{cursor:auto}#cursor,#cursor-dot{display:none}}
+
+/* ── Boot overlay ── */
+#boot{position:fixed;inset:0;background:#000;z-index:10000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;transition:opacity .8s ease,visibility .8s ease;font-family:'JetBrains Mono',monospace}
+#boot.done{opacity:0;visibility:hidden;pointer-events:none}
+#boot .logo{font-family:'Archivo Black',sans-serif;font-size:clamp(40px,8vw,110px);letter-spacing:-.04em;line-height:.9;color:var(--ink);position:relative;animation:neon-flicker 3s ease-in-out infinite}
+#boot .logo::after{content:'';position:absolute;bottom:-10px;left:0;width:0;height:2px;background:var(--acc);box-shadow:var(--neon-mag);animation:boot-bar 1.4s ease-out forwards}
+@keyframes boot-bar{to{width:100%}}
+#boot .bmeta{display:flex;gap:24px;font-size:10px;color:var(--ink-dim);text-transform:uppercase;letter-spacing:.25em}
+#boot .bmeta span{position:relative;padding-left:12px}
+#boot .bmeta span::before{content:'';position:absolute;left:0;top:50%;width:6px;height:6px;background:var(--acc);box-shadow:var(--neon-mag);transform:translateY(-50%);animation:blink 1s infinite}
+@keyframes blink{50%{opacity:.2}}
+#boot .blog{font-size:11px;color:var(--ink-ghost);text-align:center;line-height:1.8;min-height:20px;letter-spacing:.05em;animation:glitch-text 0.3s infinite}
+
+/* ── Glitch text effect ── */
+@keyframes glitch-text{
+  0%,100%{text-shadow:none;transform:translate(0)}
+  20%{text-shadow:2px 0 var(--acc),-2px 0 var(--acc2);transform:translate(-1px,1px)}
+  40%{text-shadow:-2px 0 var(--acc),2px 0 var(--acc2);transform:translate(1px,-1px)}
+  60%{text-shadow:1px 0 var(--acc3),-1px 0 var(--acc);transform:translate(0,1px)}
+  80%{text-shadow:-1px 0 var(--acc2),1px 0 var(--acc3);transform:translate(-1px,0)}
+}
+
+/* ── Neon flicker ── */
+@keyframes neon-flicker{
+  0%,19%,21%,23%,25%,54%,56%,100%{text-shadow:0 0 7px var(--acc),0 0 20px rgba(255,42,109,.5),0 0 45px rgba(255,42,109,.2);opacity:1}
+  20%,24%,55%{text-shadow:none;opacity:.85}
+}
+
+/* ── WebGL canvas ── */
+#gl{position:fixed;inset:0;z-index:0;pointer-events:none}
+
+/* ── Scan overlay (enhanced CRT) ── */
+.scan{position:fixed;inset:0;pointer-events:none;z-index:5;opacity:.08;background-image:repeating-linear-gradient(0deg,transparent 0 2px,rgba(5,217,232,.2) 2px 3px)}
+.vignette{position:fixed;inset:0;pointer-events:none;z-index:4;background:radial-gradient(ellipse at center, transparent 25%,rgba(13,2,33,.55) 65%,rgba(0,0,0,.95) 100%)}
+
+/* ── Circuit board overlay ── */
+.circuit-overlay{position:fixed;inset:0;pointer-events:none;z-index:3;opacity:.03;background-image:
+  linear-gradient(90deg,rgba(5,217,232,.3) 1px,transparent 1px),
+  linear-gradient(rgba(5,217,232,.3) 1px,transparent 1px);
+  background-size:80px 80px}
+
+/* ── Digital rain ── */
+.rain-column{position:fixed;top:-100%;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--acc2);opacity:.06;z-index:2;pointer-events:none;writing-mode:vertical-rl;animation:rain-fall linear infinite;text-shadow:0 0 8px var(--acc2)}
+@keyframes rain-fall{0%{transform:translateY(-100%)}100%{transform:translateY(200vh)}}
+
+/* ── Animated background grid ── */
+.bg-grid{position:fixed;inset:0;pointer-events:none;z-index:1;opacity:.04;
+  background-image:
+    linear-gradient(rgba(255,42,109,.4) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,42,109,.4) 1px,transparent 1px);
+  background-size:60px 60px;
+  animation:grid-shift 20s linear infinite}
+@keyframes grid-shift{0%{background-position:0 0}100%{background-position:60px 60px}}
+
+/* ── HUD ── */
+.hud{position:fixed;z-index:100;pointer-events:none;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-dim)}
+.hud-tl{top:80px;left:32px}
+.hud-tr{top:80px;right:32px;text-align:right}
+.hud-bl{bottom:32px;left:32px}
+.hud-br{bottom:32px;right:32px;text-align:right}
+.hud .line{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.hud .dot{width:6px;height:6px;border-radius:50%;background:var(--acc);box-shadow:var(--neon-mag)}
+.hud .dot.warn{background:var(--warn);box-shadow:0 0 8px var(--warn)}
+.hud .dot.cyan{background:var(--acc2);box-shadow:var(--neon-cyan)}
+.hud .bar{position:relative;width:140px;height:3px;background:rgba(5,217,232,.1);overflow:hidden}
+.hud .bar .fill{position:absolute;inset:0;background:var(--acc2);transform-origin:left;transform:scaleX(var(--fill,.7));transition:transform .3s;box-shadow:var(--neon-cyan)}
+.hud .bar.red .fill{background:var(--acc);box-shadow:var(--neon-mag)}
+.hud-tr .line{justify-content:flex-end}
+.hud-br .line{justify-content:flex-end}
+
+/* ── Corner brackets ── */
+.corner{position:fixed;width:18px;height:18px;z-index:99;pointer-events:none;border:1px solid var(--acc);box-shadow:var(--neon-mag)}
+.corner.tl{top:24px;left:24px;border-right:none;border-bottom:none}
+.corner.tr{top:24px;right:24px;border-left:none;border-bottom:none}
+.corner.bl{bottom:24px;left:24px;border-right:none;border-top:none}
+.corner.br{bottom:24px;right:24px;border-left:none;border-top:none}
+
+/* ── Top nav ── */
+.nav{position:fixed;top:0;left:0;right:0;z-index:90;padding:22px 60px;display:flex;align-items:center;justify-content:space-between;pointer-events:auto;mix-blend-mode:difference}
+.nav-logo{font-family:'Archivo Black',sans-serif;font-size:18px;letter-spacing:-.02em;color:var(--ink);animation:neon-flicker 4s ease-in-out infinite}
+.nav-logo sup{font-family:'JetBrains Mono',monospace;font-size:9px;vertical-align:super;color:var(--acc);margin-left:4px;letter-spacing:.2em}
+.nav-links{display:flex;gap:32px;align-items:center;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase}
+.nav-links a{position:relative;padding:6px 0;transition:color .3s}
+.nav-links a::after{content:'';position:absolute;left:0;bottom:0;width:0;height:1px;background:var(--acc2);box-shadow:var(--neon-cyan);transition:width .3s}
+.nav-links a:hover{color:var(--acc2)}
+.nav-links a:hover::after{width:100%}
+.nav-cta{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border:1px solid var(--acc);color:var(--ink);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.22em;text-transform:uppercase;transition:all .3s;box-shadow:inset 0 0 20px rgba(255,42,109,.05)}
+.nav-cta::before{content:'◊';color:var(--acc);transition:transform .4s}
+.nav-cta:hover{background:var(--acc);color:#fff;border-color:var(--acc);box-shadow:var(--neon-mag)}
+.nav-cta:hover::before{color:#fff;transform:rotate(180deg)}
+
+/* ── Sections ── */
+section{position:relative;z-index:2}
+.container{max-width:1440px;margin:0 auto;padding:0 60px}
+
+/* ── Hero ── */
+#hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:100px 60px 80px;position:relative;z-index:2}
+.h-kicker{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--acc2);letter-spacing:.4em;text-transform:uppercase;margin-bottom:36px;display:flex;align-items:center;gap:12px;text-shadow:0 0 10px rgba(5,217,232,.5)}
+.h-kicker::before{content:'';width:40px;height:1px;background:var(--acc2);box-shadow:var(--neon-cyan)}
+.h-title{font-family:'Archivo Black',sans-serif;font-size:clamp(48px,11vw,180px);letter-spacing:-.045em;line-height:.88;text-transform:uppercase;position:relative}
+.h-title .word{display:inline-block;overflow:hidden;vertical-align:top}
+.h-title .word span{display:inline-block;transform:translateY(110%);transition:transform 1s cubic-bezier(.2,.9,.25,1)}
+.h-title .word.on span{transform:translateY(0)}
+.h-title .accent{color:var(--acc);font-style:italic;font-family:'Space Grotesk',sans-serif;font-weight:300;font-size:.75em;letter-spacing:-.02em;text-shadow:0 0 20px rgba(255,42,109,.5)}
+
+/* Hero glitch effect */
+.h-title::before,.h-title::after{content:attr(data-text);position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;opacity:0}
+.h-title.glitch-active::before{animation:glitch-clip-1 2s infinite linear alternate-reverse;color:var(--acc2);opacity:.8;clip-path:inset(20% 0 60% 0);transform:translate(-3px)}
+.h-title.glitch-active::after{animation:glitch-clip-2 2s infinite linear alternate-reverse;color:var(--acc);opacity:.8;clip-path:inset(60% 0 10% 0);transform:translate(3px)}
+@keyframes glitch-clip-1{
+  0%{clip-path:inset(20% 0 60% 0)}
+  10%{clip-path:inset(45% 0 35% 0)}
+  20%{clip-path:inset(10% 0 70% 0)}
+  30%{clip-path:inset(80% 0 5% 0)}
+  40%{clip-path:inset(30% 0 50% 0)}
+  50%{clip-path:inset(55% 0 25% 0)}
+  60%{clip-path:inset(5% 0 80% 0)}
+  70%{clip-path:inset(65% 0 15% 0)}
+  80%{clip-path:inset(40% 0 40% 0)}
+  90%{clip-path:inset(15% 0 65% 0)}
+  100%{clip-path:inset(70% 0 10% 0)}
+}
+@keyframes glitch-clip-2{
+  0%{clip-path:inset(60% 0 10% 0)}
+  10%{clip-path:inset(25% 0 55% 0)}
+  20%{clip-path:inset(75% 0 5% 0)}
+  30%{clip-path:inset(10% 0 70% 0)}
+  40%{clip-path:inset(50% 0 30% 0)}
+  50%{clip-path:inset(35% 0 45% 0)}
+  60%{clip-path:inset(70% 0 10% 0)}
+  70%{clip-path:inset(20% 0 60% 0)}
+  80%{clip-path:inset(55% 0 25% 0)}
+  90%{clip-path:inset(5% 0 80% 0)}
+  100%{clip-path:inset(40% 0 40% 0)}
+}
+
+.h-sub{display:flex;justify-content:space-between;align-items:flex-end;margin-top:48px;gap:60px;flex-wrap:wrap}
+.h-sub .p{max-width:420px;font-size:15px;line-height:1.55;color:var(--ink-dim)}
+.h-meta{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink-dim);text-align:right;letter-spacing:.1em}
+.h-meta b{color:var(--ink);font-weight:500}
+.h-meta .row{margin-bottom:6px;display:flex;justify-content:flex-end;gap:14px}
+
+/* ── Scroll prompt ── */
+.scroll-prompt{position:absolute;bottom:40px;left:50%;transform:translateX(-50%);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.3em;color:var(--ink-dim);text-transform:uppercase;display:flex;flex-direction:column;align-items:center;gap:12px}
+.scroll-prompt .key{padding:4px 10px;border:1px solid var(--line-b);border-radius:2px;background:rgba(13,2,33,.6);color:var(--acc2);text-shadow:0 0 8px rgba(5,217,232,.4)}
+.scroll-prompt .chev{animation:chev 1.8s ease-in-out infinite;color:var(--acc2)}
+@keyframes chev{0%,100%{transform:translateY(0);opacity:.4}50%{transform:translateY(4px);opacity:1}}
+
+/* ── Letterbox bars ── */
+.letterbox{position:fixed;left:0;right:0;height:0;background:#000;z-index:80;pointer-events:none;transition:height .9s cubic-bezier(.22,1,.36,1)}
+.letterbox.top{top:0}
+.letterbox.bot{bottom:0}
+body.cine .letterbox{height:48px}
+
+/* ── Section header ── */
+.sec-head{display:flex;align-items:flex-start;justify-content:space-between;gap:48px;flex-wrap:wrap;margin-bottom:80px}
+.sec-id{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--acc2);letter-spacing:.3em;text-transform:uppercase;display:flex;align-items:center;gap:10px;flex-shrink:0;text-shadow:0 0 10px rgba(5,217,232,.4)}
+.sec-id::before{content:'';width:8px;height:8px;background:var(--acc2);display:block;box-shadow:var(--neon-cyan)}
+.sec-head h2{font-family:'Archivo Black',sans-serif;font-size:clamp(32px,5.5vw,72px);letter-spacing:-.03em;line-height:.95;text-transform:uppercase;max-width:900px}
+.sec-head h2 em{color:var(--acc);font-style:italic;font-family:'Space Grotesk',sans-serif;font-weight:400;text-shadow:0 0 20px rgba(255,42,109,.4)}
+
+/* ── Cyber banners ── */
+.cyber-banner{position:relative;overflow:hidden;padding:12px 0;border-top:1px solid var(--acc2);border-bottom:1px solid var(--acc2);background:linear-gradient(90deg,transparent,rgba(5,217,232,.05),transparent);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.4em;text-transform:uppercase;color:var(--acc2);text-align:center;z-index:2;text-shadow:0 0 8px rgba(5,217,232,.5)}
+.cyber-banner .deco{color:var(--acc);opacity:.5;margin:0 16px}
+.cyber-banner .jp{color:var(--acc3);opacity:.4;font-size:9px;margin:0 12px;letter-spacing:.1em}
+
+/* ── Neon divider ── */
+.neon-divider{height:1px;background:linear-gradient(90deg,transparent,var(--acc),var(--acc2),var(--acc3),var(--acc2),var(--acc),transparent);box-shadow:0 0 10px rgba(255,42,109,.3),0 0 20px rgba(5,217,232,.2);opacity:.6;z-index:2;position:relative;animation:neon-pulse 3s ease-in-out infinite}
+@keyframes neon-pulse{0%,100%{opacity:.4}50%{opacity:.8}}
+
+/* ── Manifesto ── */
+#manifesto{padding:200px 60px}
+.manifesto-text{font-family:'Archivo Black',sans-serif;font-size:clamp(28px,5vw,64px);line-height:1.1;letter-spacing:-.025em;text-transform:uppercase;max-width:1200px}
+.manifesto-text .w{display:inline-block;opacity:.15;transition:opacity .5s,color .5s;margin-right:.1em}
+.manifesto-text .w.on{opacity:1}
+.manifesto-text .w.key{color:var(--acc);text-shadow:0 0 20px rgba(255,42,109,.4)}
+.manifesto-stats{margin-top:120px;display:grid;grid-template-columns:repeat(4,1fr);gap:40px;border-top:var(--edge);padding-top:40px}
+.stat-num{font-family:'Archivo Black',sans-serif;font-size:56px;letter-spacing:-.04em;line-height:1;color:var(--ink)}
+.stat-num .unit{font-family:'JetBrains Mono',monospace;font-size:16px;color:var(--acc2);font-weight:400;letter-spacing:.05em;vertical-align:top;margin-left:4px;text-shadow:0 0 8px rgba(5,217,232,.4)}
+.stat-label{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--ink-dim);letter-spacing:.25em;text-transform:uppercase;margin-top:10px}
+
+/* ── Showcase image sections ── */
+.showcase{position:relative;width:100%;height:70vh;overflow:hidden;z-index:2}
+.showcase-bg{position:absolute;inset:-20%;width:140%;height:140%;background-size:cover;background-position:center;transition:transform 1.2s cubic-bezier(.2,.9,.3,1);will-change:transform}
+.showcase::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(13,2,33,.6) 0%,rgba(13,2,33,.2) 40%,rgba(13,2,33,.2) 60%,rgba(13,2,33,.8) 100%);z-index:1}
+.showcase-caption{position:absolute;bottom:40px;left:60px;right:60px;z-index:3;display:flex;justify-content:space-between;align-items:flex-end;gap:40px}
+.showcase-caption .title{font-family:'Archivo Black',sans-serif;font-size:clamp(24px,3vw,48px);text-transform:uppercase;letter-spacing:-.02em;text-shadow:0 2px 20px rgba(0,0,0,.6)}
+.showcase-caption .desc{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--ink-dim);letter-spacing:.2em;text-transform:uppercase;max-width:400px;text-align:right}
+.showcase-caption .tag{display:inline-block;padding:4px 10px;border:1px solid var(--acc);color:var(--acc);font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.2em;text-transform:uppercase;margin-bottom:8px;box-shadow:inset 0 0 10px rgba(255,42,109,.1)}
+.showcase.rev{opacity:0;transform:scale(1.02);transition:opacity 1.2s,transform 1.2s cubic-bezier(.2,.9,.3,1)}
+.showcase.rev.on{opacity:1;transform:scale(1)}
+
+/* Showcase gradients (placeholders for real images) */
+.sc-world{background:
+  radial-gradient(ellipse at 30% 60%, rgba(155,93,229,.4) 0%, transparent 50%),
+  radial-gradient(ellipse at 70% 30%, rgba(5,217,232,.3) 0%, transparent 45%),
+  radial-gradient(ellipse at 50% 80%, rgba(255,42,109,.25) 0%, transparent 40%),
+  linear-gradient(180deg,#0D0221 0%,#1A1A2E 50%,#0D0221 100%)}
+.sc-engine{background:
+  repeating-linear-gradient(90deg,rgba(5,217,232,.06) 0 1px,transparent 1px 40px),
+  repeating-linear-gradient(0deg,rgba(5,217,232,.06) 0 1px,transparent 1px 40px),
+  radial-gradient(circle at 40% 50%,rgba(255,42,109,.3) 0%,transparent 50%),
+  linear-gradient(135deg,#0D0221,#1A1A2E)}
+.sc-halcyon{background:
+  radial-gradient(ellipse at 20% 40%,rgba(155,93,229,.5) 0%,transparent 50%),
+  radial-gradient(circle at 80% 70%,rgba(5,217,232,.35) 0%,transparent 40%),
+  linear-gradient(180deg,#0D0221 0%,#12052E 50%,#0D0221 100%)}
+.sc-nightfold{background:
+  radial-gradient(ellipse at 50% 30%,rgba(26,26,46,.0) 0%,transparent 0%),
+  linear-gradient(180deg,#05010E 0%,#0D0221 40%,#0A0118 100%);
+  position:relative}
+.sc-nightfold::before{content:'';position:absolute;inset:0;background:
+  radial-gradient(circle at 30% 70%,rgba(255,42,109,.15) 0%,transparent 30%),
+  radial-gradient(circle at 70% 40%,rgba(5,217,232,.1) 0%,transparent 25%);z-index:0}
+.sc-studio{background:
+  radial-gradient(ellipse at 60% 50%,rgba(5,217,232,.2) 0%,transparent 50%),
+  radial-gradient(circle at 20% 30%,rgba(155,93,229,.2) 0%,transparent 40%),
+  linear-gradient(135deg,#0D0221 0%,#1A1A2E 50%,#0D0221 100%)}
+.sc-signal{background:
+  radial-gradient(circle at 50% 40%,rgba(255,42,109,.35) 0%,transparent 40%),
+  radial-gradient(ellipse at 50% 80%,rgba(5,217,232,.2) 0%,transparent 50%),
+  linear-gradient(180deg,#0D0221 0%,#150330 50%,#0D0221 100%)}
+
+/* ── Games grid ── */
+#works{padding:120px 60px 200px}
+.games{display:grid;grid-template-columns:repeat(12,1fr);gap:24px}
+.game{position:relative;cursor:none;overflow:hidden;background:#0c0c1a;border:var(--edge);transition:border-color .4s,transform .6s,box-shadow .6s;will-change:transform}
+.game:hover{border-color:var(--acc);box-shadow:0 0 12px rgba(255,42,109,.5),0 0 40px rgba(255,42,109,.2),0 0 80px rgba(255,42,109,.1)}
+.game.size-lg{grid-column:span 8;aspect-ratio:16/9}
+.game.size-md{grid-column:span 4;aspect-ratio:3/4}
+.game.size-sq{grid-column:span 6;aspect-ratio:4/3}
+.game.size-wide{grid-column:span 12;aspect-ratio:21/9}
+
+.game-cover{position:absolute;inset:0;overflow:hidden}
+.game-cover::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(13,2,33,.9) 100%)}
+.game-art{position:absolute;inset:0;transform:scale(1.04);transition:transform 1.2s cubic-bezier(.2,.9,.3,1),filter .6s}
+.game:hover .game-art{transform:scale(1.1);filter:brightness(1.1) saturate(1.2)}
+
+/* Holographic card effect on hover */
+.game::before{content:'';position:absolute;inset:0;z-index:5;opacity:0;transition:opacity .4s;background:linear-gradient(135deg,
+  rgba(255,42,109,.1) 0%,
+  rgba(5,217,232,.1) 25%,
+  rgba(155,93,229,.1) 50%,
+  rgba(5,217,232,.1) 75%,
+  rgba(255,42,109,.1) 100%);
+  background-size:200% 200%;
+  animation:holo-shift 3s ease infinite;
+  pointer-events:none}
+.game:hover::before{opacity:1}
+@keyframes holo-shift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+
+.game-meta{position:absolute;inset:0;padding:28px;display:flex;flex-direction:column;justify-content:space-between;z-index:6}
+.g-top{display:flex;justify-content:space-between;align-items:flex-start;gap:20px}
+.g-badge{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.2em;text-transform:uppercase;padding:6px 10px;border:1px solid rgba(209,247,255,.3);backdrop-filter:blur(12px);background:rgba(13,2,33,.5);color:var(--ink)}
+.g-badge.live{color:var(--acc2);border-color:var(--acc2);box-shadow:inset 0 0 10px rgba(5,217,232,.15)}
+.g-badge.dev{color:var(--acc3);border-color:var(--acc3);box-shadow:inset 0 0 10px rgba(155,93,229,.15)}
+.g-badge.archive{color:var(--ink-ghost);border-color:var(--ink-ghost)}
+.g-num{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink-dim);letter-spacing:.2em}
+.g-bot{display:flex;justify-content:space-between;align-items:flex-end;gap:20px}
+.g-title{font-family:'Archivo Black',sans-serif;font-size:clamp(22px,2.2vw,40px);letter-spacing:-.02em;line-height:.95;text-transform:uppercase}
+.g-sub{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--ink-dim);letter-spacing:.2em;text-transform:uppercase;margin-top:8px}
+.g-arrow{width:44px;height:44px;border:1px solid var(--ink);display:flex;align-items:center;justify-content:center;color:var(--ink);transition:all .4s;flex-shrink:0}
+.game:hover .g-arrow{background:var(--acc);color:#fff;border-color:var(--acc);transform:translate(4px,-4px);box-shadow:var(--neon-mag)}
+.g-arrow svg{width:14px;height:14px}
+
+/* Game art variants (real images with fallback gradients) */
+.art-1{background:url('images/games/halcyon.webp') center/cover no-repeat,radial-gradient(ellipse at 30% 40%, #2a1055 0%, #0D0221 60%)}
+.art-2{background:url('images/games/nightfold-card.webp') center/cover no-repeat,radial-gradient(circle at 70% 30%, #FF2A6D 0%, #3a0024 45%, #0D0221 80%)}
+.art-3{background:url('images/games/blueshift.webp') center/cover no-repeat,linear-gradient(135deg,#003842 0%,#001a22 50%,#0D0221 100%)}
+.art-4{background:url('images/games/paraline.webp') center/cover no-repeat,radial-gradient(ellipse at 50% 50%, rgba(5,217,232,.15) 0%, transparent 60%),linear-gradient(180deg,#0f1520,#0D0221)}
+.art-5{background:url('images/games/echoform.webp') center/cover no-repeat,linear-gradient(135deg,#360a2d 0%,#0D0221 70%)}
+.art-6{background:url('images/games/longrun.webp') center/cover no-repeat,radial-gradient(circle at 20% 80%,rgba(155,93,229,.25) 0%,transparent 50%),linear-gradient(180deg,#030816,#0D0221)}
+.art-grid::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(5,217,232,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(5,217,232,.08) 1px,transparent 1px);background-size:40px 40px;mask-image:radial-gradient(ellipse at center,black 30%,transparent 75%)}
+.art-dots::before{content:'';position:absolute;inset:0;background-image:radial-gradient(rgba(5,217,232,.25) 1px,transparent 1px);background-size:14px 14px;opacity:.4}
+.art-blob::before{content:'';position:absolute;width:80%;height:80%;top:10%;left:10%;background:radial-gradient(circle, currentColor 0%, transparent 60%);filter:blur(40px);color:var(--acc);opacity:.25;animation:blob 10s ease-in-out infinite alternate}
+@keyframes blob{0%{transform:translate(0,0) scale(1)}100%{transform:translate(40px,-30px) scale(1.15)}}
+
+/* Character glyph on games */
+.glyph{position:absolute;font-family:'Archivo Black',sans-serif;color:rgba(209,247,255,.04);font-size:clamp(180px,28vw,380px);line-height:.8;letter-spacing:-.08em;top:50%;left:50%;transform:translate(-50%,-50%);user-select:none;pointer-events:none;mix-blend-mode:overlay}
+.game.size-md .glyph{font-size:clamp(120px,18vw,240px)}
+
+/* ── Engine ── */
+#engine{padding:160px 60px;border-top:var(--edge);background:linear-gradient(180deg,transparent,rgba(255,42,109,.02),transparent)}
+.caps{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line-b);border:1px solid var(--line-b)}
+.cap{background:var(--bg);padding:40px 32px 32px;position:relative;min-height:420px;display:flex;flex-direction:column;transition:background .4s,box-shadow .4s}
+.cap:hover{background:var(--bg2);box-shadow:inset 0 0 30px rgba(5,217,232,.05)}
+.cap-id{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--acc2);letter-spacing:.25em;margin-bottom:24px;text-shadow:0 0 8px rgba(5,217,232,.3)}
+.cap-ico{width:64px;height:64px;margin-bottom:28px;color:var(--acc);display:flex;align-items:center;justify-content:center;filter:drop-shadow(0 0 8px rgba(255,42,109,.4))}
+.cap-ico svg{width:100%;height:100%}
+.cap h3{font-family:'Archivo Black',sans-serif;font-size:26px;letter-spacing:-.02em;margin-bottom:14px;text-transform:uppercase}
+.cap p{font-size:14px;line-height:1.6;color:var(--ink-dim);margin-bottom:24px}
+.cap-list{margin-top:auto;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink);letter-spacing:.1em;text-transform:uppercase}
+.cap-list li{padding:10px 0;border-top:var(--edge);display:flex;align-items:center;gap:10px}
+.cap-list li::before{content:'▸';color:var(--acc);font-size:9px;text-shadow:0 0 6px rgba(255,42,109,.5)}
+
+/* ── Press Log ── */
+#log{padding:160px 60px;border-top:var(--edge)}
+.log-list{display:flex;flex-direction:column}
+.log-row{display:grid;grid-template-columns:120px 100px 1fr 60px;gap:40px;padding:32px 0;border-top:var(--edge);align-items:center;transition:padding .4s,background .4s;cursor:none;position:relative}
+.log-row:last-child{border-bottom:var(--edge)}
+.log-row:hover{padding-left:20px;background:linear-gradient(90deg,rgba(255,42,109,.04),transparent 70%)}
+.log-row::before{content:'';position:absolute;left:0;top:50%;width:0;height:1px;background:var(--acc);box-shadow:var(--neon-mag);transform:translateY(-50%);transition:width .4s}
+.log-row:hover::before{width:12px}
+.log-date{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink-dim);letter-spacing:.15em}
+.log-tag{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--acc2);letter-spacing:.2em;text-transform:uppercase;padding:4px 8px;border:1px solid var(--acc2);display:inline-block;width:fit-content;box-shadow:inset 0 0 8px rgba(5,217,232,.1)}
+.log-tag.dispatch{color:var(--acc3);border-color:var(--acc3);box-shadow:inset 0 0 8px rgba(155,93,229,.1)}
+.log-tag.press{color:var(--warn);border-color:var(--warn);box-shadow:inset 0 0 8px rgba(255,107,53,.1)}
+.log-title{font-family:'Archivo Black',sans-serif;font-size:22px;letter-spacing:-.02em;text-transform:uppercase;line-height:1.1}
+.log-title b{color:var(--ink-dim);font-weight:400;font-family:'Space Grotesk',sans-serif}
+.log-arrow{justify-self:end;color:var(--ink-dim);transition:color .4s,transform .4s}
+.log-row:hover .log-arrow{color:var(--acc);transform:translateX(6px)}
+
+/* ── Marquee ── */
+.marquee{border-top:var(--edge);border-bottom:var(--edge);overflow:hidden;padding:28px 0;white-space:nowrap;display:flex}
+.marquee-inner{display:inline-flex;animation:marq 38s linear infinite;flex-shrink:0}
+.marquee-inner > span{font-family:'Archivo Black',sans-serif;font-size:clamp(48px,8vw,120px);letter-spacing:-.04em;text-transform:uppercase;padding:0 40px;color:var(--ink)}
+.marquee-inner > span em{color:var(--acc);font-style:italic;font-family:'Space Grotesk',sans-serif;font-weight:400;text-shadow:0 0 20px rgba(255,42,109,.4)}
+.marquee-inner > span .dot{color:var(--acc2);text-shadow:0 0 10px rgba(5,217,232,.5)}
+@keyframes marq{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* ── Outro CTA ── */
+#contact{padding:200px 60px 60px;position:relative}
+.outro{display:grid;grid-template-columns:1.4fr 1fr;gap:80px;align-items:flex-end}
+.outro h2{font-family:'Archivo Black',sans-serif;font-size:clamp(44px,8vw,120px);letter-spacing:-.04em;line-height:.92;text-transform:uppercase}
+.outro h2 em{color:var(--acc);font-style:italic;font-family:'Space Grotesk',sans-serif;font-weight:400;text-shadow:0 0 20px rgba(255,42,109,.4)}
+.outro-block{display:flex;flex-direction:column;gap:24px}
+.outro-block .lbl{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.3em;color:var(--ink-dim);text-transform:uppercase}
+.outro-block .val{font-size:16px;line-height:1.5}
+.outro-block .val a{border-bottom:1px solid var(--line-b);padding-bottom:2px;transition:border-color .3s,color .3s}
+.outro-block .val a:hover{color:var(--acc2);border-color:var(--acc2)}
+.cta-big{display:inline-flex;align-items:center;gap:16px;padding:22px 36px;background:var(--acc);color:#fff;font-family:'Archivo Black',sans-serif;font-size:20px;letter-spacing:.02em;text-transform:uppercase;width:fit-content;transition:all .4s;position:relative;overflow:hidden;box-shadow:var(--neon-mag)}
+.cta-big::before{content:'';position:absolute;inset:0;background:var(--acc2);transform:translateX(-100%);transition:transform .5s cubic-bezier(.7,0,.3,1)}
+.cta-big:hover::before{transform:translateX(0)}
+.cta-big:hover{box-shadow:var(--neon-cyan)}
+.cta-big span{position:relative;z-index:1;transition:color .5s}
+.cta-big:hover span{color:#000}
+.cta-big svg{position:relative;z-index:1;transition:transform .4s}
+.cta-big:hover svg{transform:translate(4px,-4px)}
+
+/* ── Footer ── */
+footer{padding:50px 60px;border-top:var(--edge);display:flex;justify-content:space-between;align-items:center;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--ink-ghost);letter-spacing:.2em;text-transform:uppercase;flex-wrap:wrap;gap:20px;position:relative;z-index:2}
+footer b{color:var(--ink-dim);font-weight:500}
+
+/* ── Achievement toast ── */
+#toast{position:fixed;top:50%;right:40px;transform:translateY(-50%) translateX(120%);z-index:200;background:var(--bg2);border:1px solid var(--acc);padding:16px 20px;display:flex;align-items:center;gap:16px;font-family:'JetBrains Mono',monospace;transition:transform .6s cubic-bezier(.22,1,.36,1);max-width:340px;box-shadow:var(--neon-mag)}
+#toast.show{transform:translateY(-50%) translateX(0)}
+#toast .ico{width:32px;height:32px;background:var(--acc);color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Archivo Black',sans-serif;font-size:14px;flex-shrink:0}
+#toast .tt{font-size:9px;color:var(--ink-dim);letter-spacing:.25em;text-transform:uppercase;margin-bottom:3px}
+#toast .tm{font-size:12px;color:var(--ink);font-weight:500;letter-spacing:.05em}
+
+/* ── Reveal utility ── */
+.rev{opacity:0;transform:translateY(40px);transition:opacity 1s cubic-bezier(.2,.9,.3,1),transform 1s cubic-bezier(.2,.9,.3,1)}
+.rev.on{opacity:1;transform:none}
+.rev.d1{transition-delay:.08s}.rev.d2{transition-delay:.16s}.rev.d3{transition-delay:.24s}.rev.d4{transition-delay:.32s}.rev.d5{transition-delay:.4s}
+
+/* ── Game card dramatic reveal ── */
+.game.rev{opacity:0;transform:translateY(60px) scale(.94);transition:opacity 1.2s cubic-bezier(.2,.9,.3,1),transform 1.2s cubic-bezier(.16,1,.3,1),border-color .4s,box-shadow .6s}
+.game.rev.on{opacity:1;transform:translateY(0) scale(1)}
+
+/* ── Showcase dramatic reveal ── */
+.showcase.rev{opacity:0;transform:scale(1.04);transition:opacity 1.4s cubic-bezier(.2,.9,.3,1),transform 1.6s cubic-bezier(.16,1,.3,1)}
+.showcase.rev.on{opacity:1;transform:scale(1)}
+.showcase.rev .showcase-caption{opacity:0;transform:translateY(30px);transition:opacity .8s .4s,transform .8s .4s cubic-bezier(.2,.9,.3,1)}
+.showcase.rev.on .showcase-caption{opacity:1;transform:none}
+
+/* ── Responsive ── */
+@media(max-width:1100px){
+  .nav{padding:18px 32px}
+  .nav-links{display:none}
+  #hero,#works,#engine,#log,#contact,#manifesto{padding-left:32px;padding-right:32px}
+  footer{padding:40px 32px}
+  .hud-tl,.hud-bl{left:16px}
+  .hud-tr,.hud-br{right:16px}
+  .corner.tl,.corner.bl{left:10px}.corner.tr,.corner.br{right:10px}
+  .games{grid-template-columns:repeat(6,1fr)}
+  .game.size-lg{grid-column:span 6}
+  .game.size-md{grid-column:span 3}
+  .game.size-sq{grid-column:span 6}
+  .caps{grid-template-columns:repeat(2,1fr)}
+  .manifesto-stats{grid-template-columns:repeat(2,1fr)}
+  .outro{grid-template-columns:1fr;gap:40px}
+  .log-row{grid-template-columns:90px 80px 1fr 40px;gap:20px}
+  .showcase-caption{left:32px;right:32px}
+}
+@media(max-width:640px){
+  .h-title{font-size:58px}
+  .hud-tr,.hud-tl{font-size:9px}
+  #hero{padding-top:120px}
+  .caps{grid-template-columns:1fr}
+  .games{grid-template-columns:1fr}
+  .game.size-lg,.game.size-md,.game.size-sq,.game.size-wide{grid-column:span 1}
+  .log-row{grid-template-columns:1fr;gap:10px;padding:20px 0}
+  .log-date,.log-tag{font-size:10px}
+  .manifesto-stats{grid-template-columns:1fr}
+  .showcase{height:50vh}
+  .showcase-caption{flex-direction:column;align-items:flex-start}
+  .showcase-caption .desc{text-align:left}
+}
+@media(prefers-reduced-motion:reduce){
+  *{animation-duration:.01ms!important;transition-duration:.01ms!important}
+}
+</style>
+</head>
+<body>
+
+<!-- Custom cursor -->
+<div id="cursor"></div>
+<div id="cursor-dot"></div>
+
+<!-- Boot overlay -->
+<div id="boot">
+  <div class="logo">KRYOS</div>
+  <div class="bmeta"><span>Engine 2.6.1</span><span>Neural Link</span><span>Secure</span></div>
+  <div class="blog" id="blog">Initializing neural interface…</div>
+</div>
+
+<!-- WebGL canvas -->
+<canvas id="gl"></canvas>
+
+<!-- Atmosphere overlays -->
+<div class="scan"></div>
+<div class="vignette"></div>
+<div class="circuit-overlay"></div>
+<div class="bg-grid"></div>
+
+<!-- Digital rain columns (generated by JS) -->
+<div id="rain-container"></div>
+
+<!-- Cinematic letterbox -->
+<div class="letterbox top"></div>
+<div class="letterbox bot"></div>
+
+<!-- HUD corners -->
+<div class="corner tl"></div>
+<div class="corner tr"></div>
+<div class="corner bl"></div>
+<div class="corner br"></div>
+
+<!-- HUD -->
+<div class="hud hud-tl">
+  <div class="line"><span class="dot"></span><span>Session · <b id="sess">KRS-2847</b></span></div>
+  <div class="line"><span>49.2827° N · 123.1207° W</span></div>
+  <div class="line"><span>Depth <b id="depth">00.000</b> km</span></div>
+</div>
+<div class="hud hud-tr">
+  <div class="line"><span id="clock">00:00:00 UTC</span></div>
+  <div class="line"><span>Build <b>6A2F · live</b></span></div>
+  <div class="line"><span>FPS <b id="fps">60</b></span></div>
+</div>
+<div class="hud hud-bl">
+  <div class="line"><span>Neural Sync</span><div class="bar" style="--fill:.82"><div class="fill"></div></div><b>82%</b></div>
+  <div class="line"><span>Power</span><div class="bar red" style="--fill:.64"><div class="fill"></div></div><b>64%</b></div>
+  <div class="line"><span class="dot warn"></span><span>Anomaly · null</span></div>
+</div>
+<div class="hud hud-br">
+  <div class="line"><span>Players online · <b id="pcount">04,812</b></span></div>
+  <div class="line"><span>Persistent world · <b>Kyrelian Cluster</b></span></div>
+  <div class="line"><span class="dot cyan"></span><span>Telemetry · NOMINAL</span></div>
+</div>
+
+<!-- Achievement toast -->
+<div id="toast">
+  <div class="ico">★</div>
+  <div>
+    <div class="tt">Achievement Unlocked</div>
+    <div class="tm" id="toast-msg">First Descent</div>
+  </div>
+</div>
+
+<!-- Nav -->
+<nav class="nav">
+  <a class="nav-logo" href="#">KRYOS<sup>S2</sup></a>
+  <div class="nav-links">
+    <a href="#works">Works</a>
+    <a href="#engine">Engine</a>
+    <a href="#log">Log</a>
+    <a href="#contact">Contact</a>
+  </div>
+  <a class="nav-cta" href="#contact">Start a Project</a>
+</nav>
+
+<!-- ██ HERO ██ -->
+<section id="hero">
+  <div class="h-kicker"><span>Season 02 · Dispatch 017</span></div>
+  <h1 class="h-title" data-text="Worlds That Remember You.">
+    <span class="word" data-w><span>Worlds</span></span><br>
+    <span class="word" data-w><span>That <em class="accent">Remember</em></span></span><br>
+    <span class="word" data-w><span>You.</span></span>
+  </h1>
+  <div class="h-sub">
+    <div class="p rev">KRYOS is a ten-person studio building real-time, persistent worlds. We make games that watch back — systems that track your choices through seasons, lobbies, and lifetimes.</div>
+    <div class="h-meta rev d2">
+      <div class="row"><span>EST.</span><b>2019 / Vancouver</b></div>
+      <div class="row"><span>TEAM</span><b>10 divinors</b></div>
+      <div class="row"><span>CURRENT</span><b>PROJECT HALCYON</b></div>
+    </div>
+  </div>
+  <div class="scroll-prompt">
+    <span class="key">SCROLL</span>
+    <span class="chev">▼</span>
+  </div>
+</section>
+
+<!-- ██ CYBER BANNER 1 ██ -->
+<div class="cyber-banner">
+  <span class="deco">◈</span> SYSTEM ONLINE <span class="jp">サイバー</span> NEURAL LINK ACTIVE <span class="deco">◈</span> PERSISTENT WORLD STATE ENGAGED <span class="jp">データ</span> SIGNAL STRENGTH: MAXIMUM <span class="deco">◈</span>
+</div>
+
+<!-- ██ SHOWCASE 1 — World Overview ██ -->
+<div class="showcase rev"
+  data-prompt="Hyper-detailed 3D render of a vast alien cyberpunk cityscape at twilight, viewed from a high vantage point. Massive neon-lit skyscrapers with holographic advertisements in magenta and cyan, flying vehicles leaving light trails, dense atmospheric fog with volumetric lighting, a giant holographic KRYOS logo projected in the sky. Style: Blade Runner meets Ghost in the Shell. Color palette: deep navy blacks (#0D0221), hot magenta neon (#FF2A6D), electric cyan highlights (#05D9E8), violet undertones (#9B5DE5). Ultra-wide 16:9 aspect ratio, cinematic depth of field, photorealistic 3D render quality, 4K resolution, Unreal Engine 5 quality.">
+  <div class="showcase-bg" style="background-image:url('images/showcase/cluster.webp');background-size:cover;background-position:center"></div>
+  <div class="showcase-caption">
+    <div>
+      <div class="tag">Concept Art</div>
+      <div class="title">The Kyrelian Cluster</div>
+    </div>
+    <div class="desc">Panoramic world overview — persistent state across every surface, every signal</div>
+  </div>
+</div>
+
+<div class="neon-divider"></div>
+
+<!-- ██ MANIFESTO ██ -->
+<section id="manifesto">
+  <div class="sec-head">
+    <div class="sec-id">01 / Manifesto</div>
+  </div>
+  <p class="manifesto-text" id="manifesto-text">
+    We believe a <span class="w key">game</span> is not a product. It is a <span class="w key">place</span>. A place can be left, and returned to, and changed by the people who walk through it. We build engines that hold <span class="w key">memory</span>. We build cameras that hold <span class="w key">patience</span>. We build audio that holds <span class="w key">silence</span>. Everything else is pixels.
+  </p>
+  <div class="manifesto-stats">
+    <div class="rev"><div class="stat-num" data-count="48"><span class="num">0</span><span class="unit">titles</span></div><div class="stat-label">Shipped · 2019→</div></div>
+    <div class="rev d1"><div class="stat-num" data-count="7"><span class="num">0</span><span class="unit">M players</span></div><div class="stat-label">Lifetime peak</div></div>
+    <div class="rev d2"><div class="stat-num" data-count="312"><span class="num">0</span><span class="unit">k fps avg</span></div><div class="stat-label">Across platforms</div></div>
+    <div class="rev d3"><div class="stat-num" data-count="16"><span class="num">0</span><span class="unit">awards</span></div><div class="stat-label">IGF · GDC · TGA</div></div>
+  </div>
+</section>
+
+<!-- ██ SHOWCASE 2 — Persistent Engine ██ -->
+<div class="showcase rev"
+  data-prompt="3D concept art of a massive futuristic server room / data center interior in cyberpunk style. Rows of towering holographic data columns glowing with magenta (#FF2A6D) and cyan (#05D9E8) light, floating data particles and circuit patterns visible in the air, a central holographic sphere displaying a rotating world map with connection nodes. The floor reflects the neon lights. Style: hyper-detailed 3D render, sci-fi concept art. Dark navy background (#0D0221), volumetric fog, god rays from overhead. 16:9 aspect ratio, 4K resolution, Octane render quality.">
+  <div class="showcase-bg" style="background-image:url('images/showcase/engine.webp');background-size:cover;background-position:center"></div>
+  <div class="showcase-caption">
+    <div>
+      <div class="tag">Concept Art</div>
+      <div class="title">The Persistent Engine</div>
+    </div>
+    <div class="desc">Memory architecture — every choice encoded, every world state preserved</div>
+  </div>
+</div>
+
+<!-- ██ CYBER BANNER 2 ██ -->
+<div class="cyber-banner">
+  <span class="deco">▲</span> ARCHIVE ACCESS GRANTED <span class="jp">記録</span> LOADING WORLD STATE <span class="deco">▲</span> 48 TITLES SHIPPED <span class="jp">ゲーム</span> MEMORY INTACT <span class="deco">▲</span>
+</div>
+
+<!-- ██ WORKS ██ -->
+<section id="works">
+  <div class="sec-head">
+    <div class="sec-id">02 / Selected Works</div>
+    <h2 class="rev">Nine worlds. <em>Ten thousand</em> hours.<br>Every one of them <em>remembered</em>.</h2>
+  </div>
+  <div class="games">
+
+    <a class="game size-lg rev" data-id="halcyon" href="play.html?id=halcyon">
+      <div class="game-cover">
+        <div class="game-art art-1 art-grid"></div>
+        <div class="glyph">H</div>
+      </div>
+      <div class="game-meta">
+        <div class="g-top">
+          <div style="display:flex;gap:8px"><span class="g-badge live">● Live</span><span class="g-badge">Co-op</span><span class="g-badge">PC · Console</span></div>
+          <div class="g-num">001 / HALCYON</div>
+        </div>
+        <div class="g-bot">
+          <div>
+            <div class="g-title">Project<br>Halcyon</div>
+            <div class="g-sub">Persistent Sci-Fi Drifter · S2 Live</div>
+          </div>
+          <div class="g-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></div>
+        </div>
+      </div>
+    </a>
+
+    <a class="game size-md rev d1" data-id="nightfold" href="play.html?id=nightfold">
+      <div class="game-cover">
+        <div class="game-art art-2 art-blob"></div>
+        <div class="glyph">N</div>
+      </div>
+      <div class="game-meta">
+        <div class="g-top">
+          <div style="display:flex;gap:8px;flex-wrap:wrap"><span class="g-badge dev">◇ Dev</span><span class="g-badge">Solo</span></div>
+          <div class="g-num">002</div>
+        </div>
+        <div class="g-bot">
+          <div>
+            <div class="g-title">Nightfold</div>
+            <div class="g-sub">Narrative Horror · Q4</div>
+          </div>
+          <div class="g-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></div>
+        </div>
+      </div>
+    </a>
+
+  </div>
+
+  <!-- ██ SHOWCASE 3 — Halcyon Key Art (between game rows) ██ -->
+  <div class="showcase rev" style="margin:48px 0"
+    data-prompt="3D cinematic key art for 'Project Halcyon': A lone astronaut-explorer standing on the edge of a massive bioluminescent alien jungle cliff, looking out over an endless cyberpunk city below merged with organic alien architecture. Giant floating crystal structures emit magenta (#FF2A6D) light from within, while cyan (#05D9E8) bioluminescent vines crawl up ancient chrome pillars. Atmospheric volumetric fog, rain particles catching neon light, shallow depth of field. Style: AAA game key art, Unreal Engine 5 cinematic. Dark base palette (#0D0221), 16:9, 4K resolution.">
+    <div class="showcase-bg" style="background-image:url('images/showcase/key-art.webp');background-size:cover;background-position:center"></div>
+    <div class="showcase-caption">
+      <div>
+        <div class="tag">Key Art</div>
+        <div class="title">Project Halcyon — Key Art</div>
+      </div>
+      <div class="desc">Bioluminescent alien jungle meets chrome megacity — season 2 key visual</div>
+    </div>
+  </div>
+
+  <div class="games" style="margin-top:48px">
+
+    <a class="game size-sq rev d2" data-id="blueshift" href="play.html?id=blueshift">
+      <div class="game-cover">
+        <div class="game-art art-3 art-dots"></div>
+        <div class="glyph">B</div>
+      </div>
+      <div class="game-meta">
+        <div class="g-top">
+          <div style="display:flex;gap:8px"><span class="g-badge live">● Live</span><span class="g-badge">Online</span></div>
+          <div class="g-num">003</div>
+        </div>
+        <div class="g-bot">
+          <div>
+            <div class="g-title">Blueshift</div>
+            <div class="g-sub">Asymmetric PvP · 32-Player</div>
+          </div>
+          <div class="g-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></div>
+        </div>
+      </div>
+    </a>
+
+    <a class="game size-sq rev d3" data-id="paraline" href="play.html?id=paraline">
+      <div class="game-cover">
+        <div class="game-art art-4 art-grid"></div>
+        <div class="glyph">P</div>
+      </div>
+      <div class="game-meta">
+        <div class="g-top">
+          <div style="display:flex;gap:8px"><span class="g-badge live">● Live</span><span class="g-badge">Roguelike</span></div>
+          <div class="g-num">004</div>
+        </div>
+        <div class="g-bot">
+          <div>
+            <div class="g-title">Paraline</div>
+            <div class="g-sub">Branching Roguelike · 1-4 Players</div>
+          </div>
+          <div class="g-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></div>
+        </div>
+      </div>
+    </a>
+
+    <a class="game size-md rev" data-id="echo" href="play.html?id=echo">
+      <div class="game-cover">
+        <div class="game-art art-5 art-blob"></div>
+        <div class="glyph">E</div>
+      </div>
+      <div class="game-meta">
+        <div class="g-top">
+          <div style="display:flex;gap:8px;flex-wrap:wrap"><span class="g-badge archive">▲ Archive</span><span class="g-badge">IGF 2023</span></div>
+          <div class="g-num">005</div>
+        </div>
+        <div class="g-bot">
+          <div>
+            <div class="g-title">Echo//Form</div>
+            <div class="g-sub">Sonic Exploration · Awarded</div>
+          </div>
+          <div class="g-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></div>
+        </div>
+      </div>
+    </a>
+
+    <a class="game size-lg rev d1" data-id="longrun" href="play.html?id=longrun">
+      <div class="game-cover">
+        <div class="game-art art-6 art-grid"></div>
+        <div class="glyph">L</div>
+      </div>
+      <div class="game-meta">
+        <div class="g-top">
+          <div style="display:flex;gap:8px"><span class="g-badge live">● Live</span><span class="g-badge">Open World</span><span class="g-badge">Cross-Platform</span></div>
+          <div class="g-num">006 / LONG RUN</div>
+        </div>
+        <div class="g-bot">
+          <div>
+            <div class="g-title">The Long Run</div>
+            <div class="g-sub">Open-World Racer · S1 Live</div>
+          </div>
+          <div class="g-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></div>
+        </div>
+      </div>
+    </a>
+
+  </div>
+</section>
+
+<!-- ██ SHOWCASE 4 — Nightfold ██ -->
+<div class="showcase rev"
+  data-prompt="3D cinematic scene from 'Nightfold': A rain-drenched cyberpunk alleyway at 3am, narrow and claustrophobic, viewed from ground level. Neon signs in magenta (#FF2A6D) and violet (#9B5DE5) reflect off wet asphalt creating mirror-like puddles. A lone figure in a dark coat stands under a flickering holographic streetlamp. Steam rises from grates. Graffiti and circuit-board patterns glow faintly on walls. Japanese neon signage (ナイトフォールド). Style: noir cyberpunk, photorealistic 3D render, extreme atmospheric mood. Very dark base (#05010E), 16:9, 4K, volumetric rain and fog, Unreal Engine 5 Lumen lighting.">
+  <div class="showcase-bg" style="background-image:url('images/showcase/nightfold.webp');background-size:cover;background-position:center"></div>
+  <div class="showcase-caption">
+    <div>
+      <div class="tag">Atmosphere</div>
+      <div class="title">Nightfold — Atmosphere</div>
+    </div>
+    <div class="desc">Noir horror in neon rain — every shadow remembers what passed through it</div>
+  </div>
+</div>
+
+<!-- ██ MARQUEE ██ -->
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-inner">
+    <span>Press <em>Start</em> <span class="dot">◆</span> Worlds That Remember <span class="dot">◆</span> Ten Thousand Hours <span class="dot">◆</span> KRYOS<sup>®</sup> <span class="dot">◆</span> Real-Time Cinema <span class="dot">◆</span></span>
+    <span>Press <em>Start</em> <span class="dot">◆</span> Worlds That Remember <span class="dot">◆</span> Ten Thousand Hours <span class="dot">◆</span> KRYOS<sup>®</sup> <span class="dot">◆</span> Real-Time Cinema <span class="dot">◆</span></span>
+  </div>
+</div>
+
+<!-- ██ ENGINE / CAPABILITIES ██ -->
+<section id="engine">
+  <div class="sec-head">
+    <div class="sec-id">03 / The Engine</div>
+    <h2 class="rev">A stack we built because<br>nobody was <em>going</em> to.</h2>
+  </div>
+  <div class="caps">
+
+    <div class="cap rev">
+      <div class="cap-id">[01]</div>
+      <div class="cap-ico"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M32 4L58 18v28L32 60 6 46V18z"/><path d="M6 18l26 14 26-14M32 32v28"/></svg></div>
+      <h3>Real-Time Cinema</h3>
+      <p>A proprietary render pipeline forked from WebGL and shipped native. GLSL-driven lighting, volumetric fog, deferred scene graph, 60fps floor.</p>
+      <ul class="cap-list">
+        <li>Volumetric & atmospheric FX</li>
+        <li>Ray-marched materials</li>
+        <li>WebXR / Vulkan parity</li>
+      </ul>
+    </div>
+
+    <div class="cap rev d1">
+      <div class="cap-id">[02]</div>
+      <div class="cap-ico"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="32" cy="32" r="26"/><path d="M32 6v52M6 32h52M11 14a38 38 0 0 0 0 36M53 14a38 38 0 0 1 0 36"/></svg></div>
+      <h3>Persistent Worldbuilding</h3>
+      <p>Procedural terrain seeded by memory. Every world remembers its players — weather systems, economies, and wildlife respond to history.</p>
+      <ul class="cap-list">
+        <li>Long-form world state</li>
+        <li>Emergent narrative systems</li>
+        <li>LIDAR-sourced geometry</li>
+      </ul>
+    </div>
+
+    <div class="cap rev d2">
+      <div class="cap-id">[03]</div>
+      <div class="cap-ico"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="14" cy="14" r="6"/><circle cx="50" cy="14" r="6"/><circle cx="14" cy="50" r="6"/><circle cx="50" cy="50" r="6"/><circle cx="32" cy="32" r="6"/><path d="M14 14l18 18 18-18M14 50l18-18 18 18"/></svg></div>
+      <h3>Online / Multiplayer</h3>
+      <p>Medusa — our in-house backend — handles asynchronous, multi-cluster state. Thousands of simultaneous players, zero desync, one URL.</p>
+      <ul class="cap-list">
+        <li>Firestore / Realtime DB</li>
+        <li>Rollback netcode</li>
+        <li>Matchmaking & anti-cheat</li>
+      </ul>
+    </div>
+
+    <div class="cap rev d3">
+      <div class="cap-id">[04]</div>
+      <div class="cap-ico"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 32c6-12 12-12 16 0s10 12 16 0 10-12 16 0"/><path d="M8 20c6-12 12-12 16 0s10 12 16 0 10-12 16 0" opacity=".4"/><path d="M8 44c6-12 12-12 16 0s10 12 16 0 10-12 16 0" opacity=".4"/></svg></div>
+      <h3>Audio & Kinetics</h3>
+      <p>Spatial audio written in GLSL-synced shaders. Composers work inside the build. Every footstep, rain tick, and heartbeat is procedural.</p>
+      <ul class="cap-list">
+        <li>Wwise + custom runtime</li>
+        <li>Adaptive musical systems</li>
+        <li>Haptic feedback design</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ██ SHOWCASE 5 — The Studio ██ -->
+<div class="showcase rev"
+  data-prompt="3D render of a high-tech cyberpunk game development studio interior. A sleek, dark open-plan workspace with 10 workstations arranged in a circle, each with triple ultrawide holographic displays showing game worlds and code. Ambient magenta (#FF2A6D) LED strips along the ceiling, cyan (#05D9E8) accent lighting under desks, floating holographic whiteboards showing game design schematics. Large floor-to-ceiling windows reveal a rainy cyberpunk cityscape at night outside. Mechanical keyboards with custom keycaps, coffee cups, scattered concept art printouts. Style: architectural visualization meets cyberpunk, photorealistic 3D, Octane render. Base palette: dark navy (#0D0221). 16:9, 4K resolution.">
+  <div class="showcase-bg" style="background-image:url('images/showcase/studio.webp');background-size:cover;background-position:center"></div>
+  <div class="showcase-caption">
+    <div>
+      <div class="tag">Studio</div>
+      <div class="title">The Studio — Vancouver</div>
+    </div>
+    <div class="desc">Ten workstations, ten divinors — where persistent worlds are forged</div>
+  </div>
+</div>
+
+<div class="neon-divider"></div>
+
+<!-- ██ PRESS LOG ██ -->
+<section id="log">
+  <div class="sec-head">
+    <div class="sec-id">04 / Transmissions</div>
+    <h2 class="rev">Dispatches from<br>the <em>workshop floor</em>.</h2>
+  </div>
+  <div class="log-list">
+    <a class="log-row rev" href="#">
+      <div class="log-date">2026.04.12</div>
+      <div class="log-tag">dispatch</div>
+      <div class="log-title">Halcyon Season 2 goes live — <b>new biome, new weapon class, and a dog that follows you home</b></div>
+      <div class="log-arrow">→</div>
+    </a>
+    <a class="log-row rev d1" href="#">
+      <div class="log-date">2026.03.02</div>
+      <div class="log-tag press">press</div>
+      <div class="log-title">KRYOS featured in <b>Edge Magazine · Issue 398 — "the quiet studio that is teaching games how to remember"</b></div>
+      <div class="log-arrow">→</div>
+    </a>
+    <a class="log-row rev d2" href="#">
+      <div class="log-date">2026.02.20</div>
+      <div class="log-tag dispatch">dispatch</div>
+      <div class="log-title">Open-sourcing <b>plume-audio</b> — our zero-dependency spatial audio runtime, MIT licensed</div>
+      <div class="log-arrow">→</div>
+    </a>
+    <a class="log-row rev d3" href="#">
+      <div class="log-date">2026.01.11</div>
+      <div class="log-tag">dispatch</div>
+      <div class="log-title">We're hiring <b>two senior graphics engineers, one narrative designer, one audio director — Vancouver &amp; remote</b></div>
+      <div class="log-arrow">→</div>
+    </a>
+    <a class="log-row rev d4" href="#">
+      <div class="log-date">2025.12.04</div>
+      <div class="log-tag press">press</div>
+      <div class="log-title">Echo//Form wins the <b>IGF Excellence in Audio award · San Francisco</b></div>
+      <div class="log-arrow">→</div>
+    </a>
+  </div>
+</section>
+
+<!-- ██ SHOWCASE 6 — Signal Tower ██ -->
+<div class="showcase rev"
+  data-prompt="3D concept art of a towering cyberpunk communication spire / signal tower at night, shot from below looking up. The tower is a massive skeletal chrome structure with glowing magenta (#FF2A6D) energy rings pulsing upward along its spine, broadcasting holographic data streams into the sky. Cyan (#05D9E8) lightning arcs between antenna arrays at the top. The base is surrounded by a dark dystopian plaza with small figures walking below. Rain falls through beams of colored light. Violet (#9B5DE5) aurora-like energy ribbons spiral around the upper third. Style: epic scale sci-fi concept art, 3D cinematic render, dramatic low-angle composition. Dark navy base (#0D0221), 16:9, 4K, Unreal Engine 5 quality.">
+  <div class="showcase-bg" style="background-image:url('images/showcase/tower.webp');background-size:cover;background-position:center"></div>
+  <div class="showcase-caption">
+    <div>
+      <div class="tag">Concept Art</div>
+      <div class="title">Signal Acquired</div>
+    </div>
+    <div class="desc">The communication hub — where every transmission finds its frequency</div>
+  </div>
+</div>
+
+<!-- ██ OUTRO MARQUEE ██ -->
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-inner">
+    <span>Press <em>Start</em> <span class="dot">◆</span> Ready Player <em>You</em> <span class="dot">◆</span> Worlds That Remember <span class="dot">◆</span> Kryos<sup>®</sup> 2026 <span class="dot">◆</span></span>
+    <span>Press <em>Start</em> <span class="dot">◆</span> Ready Player <em>You</em> <span class="dot">◆</span> Worlds That Remember <span class="dot">◆</span> Kryos<sup>®</sup> 2026 <span class="dot">◆</span></span>
+  </div>
+</div>
+
+<!-- ██ CYBER BANNER 3 ██ -->
+<div class="cyber-banner">
+  <span class="deco">◈</span> SIGNAL ACQUIRED <span class="jp">接続</span> CHANNEL OPEN <span class="deco">◈</span> TRANSMIT YOUR COORDINATES <span class="jp">座標</span> WE ARE LISTENING <span class="deco">◈</span>
+</div>
+
+<!-- ██ CONTACT ██ -->
+<section id="contact">
+  <div class="outro">
+    <h2 class="rev">Come build <em>with us</em>,<br>or come play <em>against us</em>.</h2>
+    <div class="outro-block rev d1">
+      <div>
+        <div class="lbl">Studio</div>
+        <div class="val">417 East Cordova Street<br>Vancouver · BC · V6A 1L6</div>
+      </div>
+      <div>
+        <div class="lbl">Enquiries</div>
+        <div class="val"><a href="mailto:signal@kryos.studio">signal@kryos.studio</a><br><a href="mailto:press@kryos.studio">press@kryos.studio</a></div>
+      </div>
+      <a class="cta-big rev d2" href="#"><span>Start a Project</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div>© 2026 <b>KRYOS STUDIOS INC.</b> — All worlds held under registry</div>
+  <div style="display:flex;gap:20px"><a href="#">Twitter</a><a href="#">YouTube</a><a href="#">Discord</a><a href="#">Steam</a></div>
+  <div><b>Kryos Engine</b> 2.6.1 — Built in Vancouver</div>
+</footer>
+
+<script>
+/* ═══════════════════════════════════════════════
+   KRYOS — Cyberpunk Runtime
+   ═══════════════════════════════════════════════ */
+
+/* ------------ Digital Rain ------------ */
+(function(){
+  const container=document.getElementById('rain-container');
+  if(!container)return;
+  const chars='アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789ABCDEF';
+  const columnCount=Math.floor(window.innerWidth/30);
+  for(let i=0;i<columnCount;i++){
+    const col=document.createElement('div');
+    col.className='rain-column';
+    col.style.left=(i*30+Math.random()*15)+'px';
+    col.style.animationDuration=(8+Math.random()*12)+'s';
+    col.style.animationDelay=(-Math.random()*15)+'s';
+    col.style.opacity=String(0.02+Math.random()*0.06);
+    let text='';
+    const len=10+Math.floor(Math.random()*20);
+    for(let j=0;j<len;j++) text+=chars[Math.floor(Math.random()*chars.length)];
+    col.textContent=text;
+    container.appendChild(col);
+  }
+})();
+
+/* ------------ Boot sequence ------------ */
+(function(){
+  const lines=['Initializing neural interface…','Compiling GLSL shaders…','Loading persistent world state…','Establishing neural link…','Handshake complete · entering cyberspace'];
+  const blog=document.getElementById('blog');
+  let i=0;
+  const tick=()=>{
+    if(i>=lines.length){
+      document.getElementById('boot').classList.add('done');
+      setTimeout(startHero,400);
+      return;
+    }
+    blog.textContent=lines[i++]+' '+Math.floor(Math.random()*100).toString().padStart(2,'0')+'%';
+    setTimeout(tick,260);
+  };
+  setTimeout(tick,100);
+})();
+
+/* ------------ Custom cursor + magnetic ------------ */
+(function(){
+  const c=document.getElementById('cursor'),d=document.getElementById('cursor-dot');
+  let tx=0,ty=0,cx=0,cy=0;
+  addEventListener('mousemove',e=>{tx=e.clientX;ty=e.clientY;d.style.left=tx+'px';d.style.top=ty+'px'});
+  function raf(){cx+=(tx-cx)*.18;cy+=(ty-cy)*.18;c.style.left=cx+'px';c.style.top=cy+'px';requestAnimationFrame(raf)}
+  raf();
+  const hot='a, button, .game, .log-row, .nav-cta, .cta-big';
+  document.querySelectorAll(hot).forEach(el=>{
+    el.addEventListener('mouseenter',()=>c.classList.add('hot'));
+    el.addEventListener('mouseleave',()=>c.classList.remove('hot'));
+  });
+  document.querySelectorAll('.nav-cta, .cta-big, .g-arrow').forEach(el=>{
+    el.addEventListener('mousemove',e=>{
+      const r=el.getBoundingClientRect();
+      const x=e.clientX-r.left-r.width/2,y=e.clientY-r.top-r.height/2;
+      el.style.transform=`translate(${x*.25}px,${y*.25}px)`;
+    });
+    el.addEventListener('mouseleave',()=>{el.style.transform=''});
+  });
+})();
+
+/* ------------ HUD live data ------------ */
+(function(){
+  const clock=document.getElementById('clock'),fps=document.getElementById('fps'),depth=document.getElementById('depth'),pcount=document.getElementById('pcount');
+  function pad(n,w=2){return String(n).padStart(w,'0')}
+  setInterval(()=>{
+    const d=new Date();
+    clock.textContent=`${pad(d.getUTCHours())}:${pad(d.getUTCMinutes())}:${pad(d.getUTCSeconds())} UTC`;
+  },500);
+  let last=performance.now(),frames=0;
+  function loop(t){
+    frames++;
+    if(t-last>=1000){fps.textContent=frames;frames=0;last=t}
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+  let dk=0;
+  setInterval(()=>{dk+=0.017+Math.random()*.04;depth.textContent=dk.toFixed(3)},80);
+  let pc=4812;
+  setInterval(()=>{pc+=Math.round((Math.random()-.45)*12);if(pc<4500)pc=4500;if(pc>5200)pc=5200;pcount.textContent=pc.toString().padStart(5,'0').replace(/(\d{2})(\d{3})/,'$1,$2')},1800);
+})();
+
+/* ------------ Reveal on scroll ------------ */
+(function(){
+  const io=new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('on')});
+  },{threshold:.15,rootMargin:'0px 0px -8% 0px'});
+  document.querySelectorAll('.rev').forEach(el=>io.observe(el));
+})();
+
+/* ------------ Hero word reveal + glitch ------------ */
+function startHero(){
+  const words=document.querySelectorAll('[data-w]');
+  words.forEach((w,i)=>setTimeout(()=>w.classList.add('on'),i*180+200));
+  const title=document.querySelector('.h-title');
+  setTimeout(()=>{
+    title.classList.add('glitch-active');
+    setTimeout(()=>title.classList.remove('glitch-active'),800);
+  },1200);
+  setInterval(()=>{
+    if(Math.random()>0.7){
+      title.classList.add('glitch-active');
+      setTimeout(()=>title.classList.remove('glitch-active'),150+Math.random()*400);
+    }
+  },4000);
+}
+
+/* ------------ Manifesto word-by-word reveal ------------ */
+(function(){
+  const el=document.getElementById('manifesto-text');
+  const walk=(node)=>{
+    const out=[];
+    node.childNodes.forEach(n=>{
+      if(n.nodeType===3){
+        const t=n.textContent;
+        t.split(/(\s+)/).forEach(p=>{
+          if(!p.trim()){out.push(document.createTextNode(p));return}
+          const s=document.createElement('span');s.className='w';s.textContent=p;out.push(s);
+        });
+      } else {
+        out.push(n);
+      }
+    });
+    node.innerHTML='';
+    out.forEach(n=>node.appendChild(n));
+  };
+  walk(el);
+  const words=el.querySelectorAll('.w');
+  const io=new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        words.forEach((w,i)=>setTimeout(()=>w.classList.add('on'),i*40));
+        io.disconnect();
+      }
+    });
+  },{threshold:.3});
+  io.observe(el);
+})();
+
+/* ------------ Counter animations ------------ */
+(function(){
+  const counters=document.querySelectorAll('[data-count]');
+  const animate=(el)=>{
+    const end=parseFloat(el.dataset.count);
+    const n=el.querySelector('.num');
+    const dur=1600,t0=performance.now();
+    const tick=(t)=>{
+      const p=Math.min(1,(t-t0)/dur);
+      const eased=1-Math.pow(1-p,3);
+      const v=end*eased;
+      n.textContent=end>=100?Math.round(v):v.toFixed(1);
+      if(p<1)requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  };
+  const io=new IntersectionObserver((es)=>{
+    es.forEach(e=>{if(e.isIntersecting){animate(e.target);io.unobserve(e.target)}});
+  },{threshold:.5});
+  counters.forEach(c=>io.observe(c));
+})();
+
+/* ------------ Achievement toast on section enter ------------ */
+(function(){
+  const toast=document.getElementById('toast'),msg=document.getElementById('toast-msg');
+  const titles={manifesto:'Studio Manifesto',works:'Archive Unlocked',engine:'Engine Access',log:'Transmission Received',contact:'Signal Acquired'};
+  const seen=new Set();
+  const io=new IntersectionObserver((es)=>{
+    es.forEach(e=>{
+      if(e.isIntersecting && !seen.has(e.target.id)){
+        seen.add(e.target.id);
+        msg.textContent=titles[e.target.id]||e.target.id;
+        toast.classList.add('show');
+        clearTimeout(toast._t);
+        toast._t=setTimeout(()=>toast.classList.remove('show'),2600);
+      }
+    });
+  },{threshold:.3});
+  ['manifesto','works','engine','log','contact'].forEach(id=>{
+    const el=document.getElementById(id); if(el)io.observe(el);
+  });
+})();
+
+/* ------------ Game card 3D tilt + chromatic aberration ------------ */
+(function(){
+  document.querySelectorAll('.game').forEach(el=>{
+    el.addEventListener('mousemove',e=>{
+      const r=el.getBoundingClientRect();
+      const x=((e.clientX-r.left)/r.width-.5)*2;
+      const y=((e.clientY-r.top)/r.height-.5)*2;
+      el.style.transform=`perspective(1200px) rotateX(${-y*3}deg) rotateY(${x*4}deg) scale(1.01)`;
+      const art=el.querySelector('.game-art');
+      if(art) art.style.transform=`scale(1.1) translate(${x*18}px,${y*18}px)`;
+      const glyph=el.querySelector('.glyph');
+      if(glyph) glyph.style.transform=`translate(calc(-50% + ${x*20}px), calc(-50% + ${y*20}px))`;
+    });
+    el.addEventListener('mouseleave',()=>{
+      el.style.transform='';
+      const art=el.querySelector('.game-art'); if(art)art.style.transform='';
+      const glyph=el.querySelector('.glyph'); if(glyph)glyph.style.transform='translate(-50%,-50%)';
+    });
+  });
+})();
+
+/* ------------ Game click → cinematic transition ------------ */
+(function(){
+  document.querySelectorAll('.game').forEach(el=>{
+    el.addEventListener('click',(e)=>{
+      e.preventDefault();
+      document.body.classList.add('cine');
+      const href=el.getAttribute('href');
+      setTimeout(()=>{window.location.href=href},700);
+    });
+  });
+})();
+
+/* ------------ Showcase parallax ------------ */
+(function(){
+  const showcases=document.querySelectorAll('.showcase');
+  function onScroll(){
+    showcases.forEach(sc=>{
+      const r=sc.getBoundingClientRect();
+      const progress=(window.innerHeight-r.top)/(window.innerHeight+r.height);
+      const bg=sc.querySelector('.showcase-bg');
+      if(bg){
+        const offset=(progress-0.5)*60;
+        bg.style.transform=`translateY(${offset}px)`;
+      }
+    });
+  }
+  addEventListener('scroll',onScroll,{passive:true});
+})();
+
+/* ------------ Three.js WebGL hero scene (cyberpunk palette) ------------ */
+(function(){
+  if(!window.THREE)return;
+  const canvas=document.getElementById('gl');
+  const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true});
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio,1.8));
+  renderer.setSize(innerWidth,innerHeight);
+  renderer.setClearColor(0x000000,0);
+
+  const scene=new THREE.Scene();
+  scene.fog=new THREE.FogExp2(0x0D0221,0.065);
+  const camera=new THREE.PerspectiveCamera(50,innerWidth/innerHeight,0.1,100);
+  camera.position.set(0,0,6);
+
+  const coreGeom=new THREE.IcosahedronGeometry(1.6,40);
+  const coreMat=new THREE.ShaderMaterial({
+    transparent:true,
+    uniforms:{
+      uTime:{value:0},
+      uMouse:{value:new THREE.Vector2(0,0)},
+      uAccent:{value:new THREE.Color('#FF2A6D')},
+      uAccent2:{value:new THREE.Color('#05D9E8')},
+    },
+    vertexShader:`
+      uniform float uTime;
+      uniform vec2 uMouse;
+      varying vec3 vNormal;
+      varying vec3 vPos;
+      varying float vD;
+      vec3 mod289(vec3 x){return x-floor(x*(1.0/289.0))*289.0;}
+      vec4 mod289(vec4 x){return x-floor(x*(1.0/289.0))*289.0;}
+      vec4 permute(vec4 x){return mod289(((x*34.0)+1.0)*x);}
+      vec4 taylorInvSqrt(vec4 r){return 1.79284291400159-0.85373472095314*r;}
+      float snoise(vec3 v){
+        const vec2 C=vec2(1.0/6.0,1.0/3.0); const vec4 D=vec4(0.0,0.5,1.0,2.0);
+        vec3 i=floor(v+dot(v,C.yyy)); vec3 x0=v-i+dot(i,C.xxx);
+        vec3 g=step(x0.yzx,x0.xyz); vec3 l=1.0-g;
+        vec3 i1=min(g.xyz,l.zxy); vec3 i2=max(g.xyz,l.zxy);
+        vec3 x1=x0-i1+C.xxx; vec3 x2=x0-i2+C.yyy; vec3 x3=x0-D.yyy;
+        i=mod289(i);
+        vec4 p=permute(permute(permute(i.z+vec4(0.0,i1.z,i2.z,1.0))+i.y+vec4(0.0,i1.y,i2.y,1.0))+i.x+vec4(0.0,i1.x,i2.x,1.0));
+        float n_=0.142857142857; vec3 ns=n_*D.wyz-D.xzx;
+        vec4 j=p-49.0*floor(p*ns.z*ns.z);
+        vec4 x_=floor(j*ns.z); vec4 y_=floor(j-7.0*x_);
+        vec4 x=x_*ns.x+ns.yyyy; vec4 y=y_*ns.x+ns.yyyy; vec4 h=1.0-abs(x)-abs(y);
+        vec4 b0=vec4(x.xy,y.xy); vec4 b1=vec4(x.zw,y.zw);
+        vec4 s0=floor(b0)*2.0+1.0; vec4 s1=floor(b1)*2.0+1.0; vec4 sh=-step(h,vec4(0.0));
+        vec4 a0=b0.xzyw+s0.xzyw*sh.xxyy; vec4 a1=b1.xzyw+s1.xzyw*sh.zzww;
+        vec3 p0=vec3(a0.xy,h.x); vec3 p1=vec3(a0.zw,h.y); vec3 p2=vec3(a1.xy,h.z); vec3 p3=vec3(a1.zw,h.w);
+        vec4 norm=taylorInvSqrt(vec4(dot(p0,p0),dot(p1,p1),dot(p2,p2),dot(p3,p3)));
+        p0*=norm.x; p1*=norm.y; p2*=norm.z; p3*=norm.w;
+        vec4 m=max(0.6-vec4(dot(x0,x0),dot(x1,x1),dot(x2,x2),dot(x3,x3)),0.0);
+        m=m*m; return 42.0*dot(m*m,vec4(dot(p0,x0),dot(p1,x1),dot(p2,x2),dot(p3,x3)));
+      }
+      void main(){
+        vNormal=normalize(normalMatrix*normal);
+        float n=snoise(normal*1.2+vec3(uTime*0.18));
+        float n2=snoise(normal*3.0+vec3(uTime*0.3));
+        float d=n*0.42 + n2*0.12 + length(uMouse)*0.15;
+        vD=d;
+        vec3 pos=position+normal*d;
+        vPos=pos;
+        gl_Position=projectionMatrix*modelViewMatrix*vec4(pos,1.0);
+      }
+    `,
+    fragmentShader:`
+      uniform float uTime;
+      uniform vec3 uAccent;
+      uniform vec3 uAccent2;
+      varying vec3 vNormal;
+      varying vec3 vPos;
+      varying float vD;
+      void main(){
+        vec3 light=normalize(vec3(0.6,0.8,0.9));
+        float ndl=clamp(dot(vNormal,light),0.0,1.0);
+        float fres=pow(1.0-ndl,2.2);
+        vec3 base=mix(vec3(0.05,0.01,0.13),vec3(0.1,0.04,0.18),ndl);
+        vec3 edgeColor=mix(uAccent,uAccent2,sin(vD*3.0+uTime*0.5)*0.5+0.5);
+        vec3 edge=mix(base,edgeColor,fres*smoothstep(0.1,0.6,vD+0.3));
+        float pulse=0.5+0.5*sin(uTime*0.8+vD*3.0);
+        edge+=edgeColor*0.08*pulse*fres;
+        gl_FragColor=vec4(edge,0.95);
+      }
+    `
+  });
+  const core=new THREE.Mesh(coreGeom,coreMat);
+  scene.add(core);
+
+  const shellMat=new THREE.MeshBasicMaterial({color:0xFF2A6D,wireframe:true,transparent:true,opacity:0.08});
+  const shell=new THREE.Mesh(new THREE.IcosahedronGeometry(2.4,2),shellMat);
+  scene.add(shell);
+
+  const pcount=1800;
+  const pgeom=new THREE.BufferGeometry();
+  const pos=new Float32Array(pcount*3);
+  for(let i=0;i<pcount;i++){
+    const r=4+Math.random()*16;
+    const th=Math.random()*Math.PI*2;
+    const ph=Math.acos(2*Math.random()-1);
+    pos[i*3]=r*Math.sin(ph)*Math.cos(th);
+    pos[i*3+1]=r*Math.sin(ph)*Math.sin(th);
+    pos[i*3+2]=r*Math.cos(ph);
+  }
+  pgeom.setAttribute('position',new THREE.BufferAttribute(pos,3));
+  const pmat=new THREE.PointsMaterial({color:0xD1F7FF,size:0.015,transparent:true,opacity:0.55,sizeAttenuation:true});
+  const particles=new THREE.Points(pgeom,pmat);
+  scene.add(particles);
+
+  const p2count=500;
+  const p2geom=new THREE.BufferGeometry();
+  const pos2=new Float32Array(p2count*3);
+  for(let i=0;i<p2count;i++){
+    pos2[i*3]=(Math.random()-0.5)*40;
+    pos2[i*3+1]=(Math.random()-0.5)*30;
+    pos2[i*3+2]=-10-Math.random()*15;
+  }
+  p2geom.setAttribute('position',new THREE.BufferAttribute(pos2,3));
+  const p2mat=new THREE.PointsMaterial({color:0x05D9E8,size:0.04,transparent:true,opacity:0.5});
+  scene.add(new THREE.Points(p2geom,p2mat));
+
+  const ringMat1=new THREE.MeshBasicMaterial({color:0xFF2A6D,transparent:true,opacity:.22,side:THREE.DoubleSide});
+  const ringMat2=new THREE.MeshBasicMaterial({color:0x05D9E8,transparent:true,opacity:.18,side:THREE.DoubleSide});
+  const ring1=new THREE.Mesh(new THREE.TorusGeometry(3.2,0.005,8,180),ringMat1);
+  const ring2=new THREE.Mesh(new THREE.TorusGeometry(4.2,0.004,8,180),ringMat2);
+  ring1.rotation.x=1.2; ring2.rotation.x=0.5; ring2.rotation.y=0.8;
+  scene.add(ring1,ring2);
+
+  const mouse={x:0,y:0,tx:0,ty:0};
+  addEventListener('mousemove',e=>{mouse.tx=(e.clientX/innerWidth-.5)*2;mouse.ty=(e.clientY/innerHeight-.5)*2});
+  let scroll=0;
+  addEventListener('scroll',()=>{scroll=window.scrollY});
+
+  addEventListener('resize',()=>{
+    renderer.setSize(innerWidth,innerHeight);
+    camera.aspect=innerWidth/innerHeight;
+    camera.updateProjectionMatrix();
+  });
+
+  const clock=new THREE.Clock();
+  let shellPulse=0;
+  function render(){
+    const t=clock.getElapsedTime();
+    mouse.x+=(mouse.tx-mouse.x)*.05; mouse.y+=(mouse.ty-mouse.y)*.05;
+    coreMat.uniforms.uTime.value=t;
+    coreMat.uniforms.uMouse.value.set(mouse.x*0.5,mouse.y*0.5);
+
+    core.rotation.y=t*0.1+mouse.x*0.3;
+    core.rotation.x=mouse.y*0.3;
+    shell.rotation.y=-t*0.05;
+    shell.rotation.x=t*0.03;
+    shellPulse=0.05+Math.sin(t*1.5)*0.04;
+    shellMat.opacity=shellPulse;
+    ring1.rotation.z=t*0.15;
+    ring2.rotation.z=-t*0.1;
+    particles.rotation.y=t*0.01;
+
+    const sProg=Math.min(scroll/innerHeight,2);
+    camera.position.z=6+sProg*3;
+    camera.position.y=-sProg*1.5;
+    camera.lookAt(0,0,0);
+
+    renderer.render(scene,camera);
+    requestAnimationFrame(render);
+  }
+  render();
+})();
+</script>
+</body>
+</html>
