@@ -23,6 +23,18 @@ body{min-height:100vh;cursor:none}
 a{color:inherit;text-decoration:none}
 ::selection{background:var(--acc);color:#fff}
 
+/* ── Custom Scrollbar ── */
+::-webkit-scrollbar{width:8px;height:8px}
+::-webkit-scrollbar-track{background:var(--bg);border-left:1px solid var(--line)}
+::-webkit-scrollbar-thumb{background:var(--ink-ghost);border-radius:0}
+::-webkit-scrollbar-thumb:hover{background:var(--acc2)}
+@supports not selector(::-webkit-scrollbar) { html{scrollbar-width:thin;scrollbar-color:var(--ink-ghost) var(--bg)} }
+
+/* ── Back to Top ── */
+#btt{position:fixed;bottom:90px;right:40px;width:36px;height:36px;background:rgba(13,2,33,.7);backdrop-filter:blur(10px);border:1px solid var(--acc2);color:var(--acc2);display:flex;align-items:center;justify-content:center;font-size:16px;z-index:95;cursor:pointer;opacity:0;pointer-events:none;transform:translateY(20px);transition:all .4s cubic-bezier(.2,.9,.3,1);box-shadow:0 0 15px rgba(5,217,232,.15)}
+#btt.show{opacity:1;pointer-events:auto;transform:translateY(0)}
+#btt:hover{background:var(--acc2);color:#000;box-shadow:var(--neon-cyan);transform:translateY(-3px)}
+
 #cursor{position:fixed;top:0;left:0;width:20px;height:20px;pointer-events:none;z-index:9999;mix-blend-mode:difference;transform:translate(-50%,-50%);transition:width .25s,height .25s}
 #cursor::before,#cursor::after{content:'';position:absolute;background:var(--ink)}
 #cursor::before{left:50%;top:0;width:1px;height:100%;transform:translateX(-50%)}
@@ -75,7 +87,12 @@ a{color:inherit;text-decoration:none}
 .hud b{color:var(--ink);font-weight:500}
 
 /* Top back bar */
-.topbar{position:fixed;top:0;left:0;right:0;z-index:90;padding:20px 40px;display:flex;justify-content:space-between;align-items:center;mix-blend-mode:difference;pointer-events:auto}
+.topbar{position:fixed;top:0;left:0;right:0;z-index:90;padding:20px 40px;display:flex;justify-content:space-between;align-items:center;pointer-events:auto;transition:all .6s cubic-bezier(.2,.9,.3,1);perspective:1000px;transform-style:preserve-3d}
+.topbar::before{content:'';position:absolute;inset:0;background:rgba(13,2,33,.8);backdrop-filter:blur(15px);opacity:0;transition:all .6s cubic-bezier(.2,.9,.3,1);z-index:-1;border:1px solid var(--acc2);box-shadow:0 10px 30px rgba(0,0,0,.8), 0 0 15px rgba(5,217,232,.2)}
+.topbar.scrolled{padding:14px 40px;width:92%;left:4%;top:20px;transform:rotateX(-6deg) translateY(-2px);border-radius:2px}
+.topbar.scrolled::before{opacity:1;border-radius:2px}
+.topbar.scrolled:hover{transform:rotateX(0deg) translateY(0)}
+.topbar.scrolled:hover::before{box-shadow:0 20px 40px rgba(0,0,0,.8), var(--neon-cyan); border-color:var(--ink)}
 .back{display:inline-flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--ink);transition:transform .3s}
 .back:hover{transform:translateX(-4px)}
 .back::before{content:'◂';color:var(--acc);margin-right:4px}
@@ -90,6 +107,26 @@ a{color:inherit;text-decoration:none}
 .hero-art:hover .art{transform:scale(1.04)}
 .hero-art::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgba(0,0,0,.7));pointer-events:none}
 .hero-glyph{position:absolute;font-family:'Archivo Black',sans-serif;color:rgba(240,240,245,.05);font-size:clamp(240px,40vw,500px);line-height:.78;letter-spacing:-.08em;top:50%;left:50%;transform:translate(-50%,-50%);user-select:none;pointer-events:none}
+
+/* ── Cinematic FX for Static Heroes (No Trailer) ── */
+.hero-art.cinematic-fx .art { animation: hero-breathe 22s ease-in-out infinite alternate, neon-pulse 8s linear infinite; }
+.hero-art.cinematic-fx::before {
+  content: ''; position: absolute; left: 0; right: 0; height: 2px;
+  background: var(--acc2); box-shadow: 0 0 15px var(--acc2), 0 0 35px var(--acc2);
+  z-index: 5; opacity: 0; pointer-events: none; animation: play-scan 7s cubic-bezier(.4,0,.2,1) infinite;
+}
+.hero-art.cinematic-fx .hero-glyph { animation: glyph-pulse 6s ease-in-out infinite alternate; }
+@keyframes hero-breathe {
+  0% { transform: scale(1) translate(0, 0); }
+  100% { transform: scale(1.12) translate(-2%, 2%); }
+}
+@keyframes neon-pulse {
+  0%, 100% { filter: hue-rotate(0deg) saturate(1) brightness(1); }
+  50% { filter: hue-rotate(15deg) saturate(1.3) brightness(1.2); }
+}
+@keyframes play-scan { 0% { top: -10%; opacity: 0; } 15% { opacity: .85; } 85% { opacity: .85; } 100% { top: 110%; opacity: 0; } }
+@keyframes glyph-pulse { 0% { transform: translate(-50%, -50%) scale(1); opacity: 1; filter: blur(0px); } 100% { transform: translate(-50%, -50%) scale(1.05); opacity: 0.5; filter: blur(8px); text-shadow: 0 0 20px rgba(5,217,232,.2); } }
+
 .hero-badges{position:absolute;top:20px;left:20px;display:flex;flex-direction:column;gap:8px;z-index:2}
 .hero-badges .bd{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.2em;text-transform:uppercase;padding:6px 10px;border:1px solid rgba(240,240,245,.3);backdrop-filter:blur(12px);background:rgba(0,0,0,.45);color:var(--ink);width:fit-content}
 .hero-badges .bd.live{color:var(--acc2);border-color:var(--acc2);box-shadow:inset 0 0 10px rgba(5,217,232,.15)}
@@ -119,6 +156,10 @@ a{color:inherit;text-decoration:none}
 .lore-id{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--acc);letter-spacing:.3em;text-transform:uppercase}
 .lore-body h2{font-family:'Archivo Black',sans-serif;font-size:clamp(28px,3.5vw,48px);letter-spacing:-.025em;line-height:1;text-transform:uppercase;margin-bottom:24px;max-width:700px}
 .lore-body p{font-size:16px;line-height:1.7;color:var(--ink-dim);max-width:720px;margin-bottom:18px}
+
+/* Lore Blueprint Images */
+.lore-img{width:clamp(320px, 50vw, 1200px);max-width:none;display:block;border:1px solid var(--line-b);margin:16px 0 40px;opacity:.8;mix-blend-mode:screen;border-radius:4px;box-shadow:0 10px 30px rgba(5,217,232,.05);transition:opacity .4s, filter .4s, border-color .4s, box-shadow .4s;cursor:none}
+.lore-img:hover{opacity:1;filter:brightness(1.3) drop-shadow(0 0 10px rgba(5,217,232,.3));border-color:var(--acc2);box-shadow:0 10px 40px rgba(5,217,232,.2), var(--neon-cyan)}
 
 /* Credits */
 .credits{display:grid;grid-template-columns:repeat(3,1fr);gap:40px;padding-top:60px;border-top:var(--edge);margin-bottom:100px}
@@ -162,12 +203,14 @@ footer{padding:40px 60px;border-top:var(--edge);display:flex;justify-content:spa
   .hero{grid-template-columns:1fr;gap:40px}
   .wrap{padding:120px 32px 60px}
   .topbar{padding:16px 24px}
+  .topbar.scrolled{width:94%;left:3%;padding:12px 24px}
   .corner.tl,.corner.bl{left:10px}.corner.tr,.corner.br{right:10px}
   .hud-tl,.hud-bl{left:20px}.hud-tr,.hud-br{right:20px}
   .stats-grid{grid-template-columns:repeat(2,1fr)}
   .credits{grid-template-columns:repeat(2,1fr)}
   .rel-grid{grid-template-columns:repeat(2,1fr)}
   .lore{grid-template-columns:1fr;gap:24px}
+  #btt{right:20px}
 }
 @media(max-width:620px){
   .stats-grid,.credits,.rel-grid{grid-template-columns:1fr}
@@ -195,10 +238,10 @@ footer{padding:40px 60px;border-top:var(--edge);display:flex;justify-content:spa
 /* ── Launch Trailer Cinematic Overlay ── */
 #trailer{position:fixed;inset:0;z-index:20000;background:#000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .45s ease}
 #trailer.on{opacity:1;pointer-events:all}
-.tr-bg{position:absolute;inset:0;background-size:cover!important;background-position:center!important;opacity:0;transform:scale(1.1);transition:opacity 2s ease,transform 12s cubic-bezier(.1,.4,.2,1);filter:brightness(.42) saturate(1.4)}
+.tr-bg{position:absolute;inset:0;background-size:cover!important;background-position:center!important;opacity:0;transform:scale(1.1);transition:opacity 2s ease,transform 12s cubic-bezier(.1,.4,.2,1);filter:brightness(.9) saturate(1.1)}
 #trailer.reveal .tr-bg{opacity:1;transform:scale(1.01)}
 .tr-scan{position:absolute;inset:0;pointer-events:none;z-index:2;background-image:repeating-linear-gradient(0deg,transparent 0 2px,rgba(5,217,232,.06) 2px 3px)}
-.tr-vignette{position:absolute;inset:0;z-index:3;background:radial-gradient(ellipse at center,transparent 10%,rgba(0,0,0,.7) 58%,#000 100%);pointer-events:none}
+.tr-vignette{position:absolute;inset:0;z-index:3;background:radial-gradient(ellipse at center,transparent 20%,rgba(0,0,0,.4) 65%,rgba(0,0,0,.85) 100%);pointer-events:none}
 .tr-glitch-bar{position:absolute;left:0;right:0;height:2px;z-index:5;pointer-events:none;opacity:0}
 .tr-glitch-bar.b1{top:28%;background:var(--acc)}
 .tr-glitch-bar.b2{top:52%;background:var(--acc2)}
@@ -229,7 +272,7 @@ footer{padding:40px 60px;border-top:var(--edge);display:flex;justify-content:spa
 .tr-logo{position:absolute;bottom:48px;left:50%;transform:translateX(-50%);font-family:'Archivo Black',sans-serif;font-size:11px;letter-spacing:.35em;text-transform:uppercase;color:rgba(209,247,255,.18);z-index:10;opacity:0;transition:opacity 1s .5s;white-space:nowrap}
 .tr-logo.s{opacity:1}
 .tr-progress{position:absolute;bottom:0;left:0;right:0;height:2px;background:rgba(5,217,232,.08);z-index:20}
-.tr-progress .fill{height:100%;width:0%;background:var(--acc);box-shadow:var(--neon-mag);transition:width linear}
+.tr-progress .fill{height:100%;width:0%;background:var(--acc);box-shadow:var(--neon-mag);transition:width 0.25s linear}
 </style>
 </head>
 <body>
@@ -286,6 +329,9 @@ footer{padding:40px 60px;border-top:var(--edge);display:flex;justify-content:spa
   <a class="back" href="index.html#works">Return to Archive</a>
   <a class="brand" href="index.html">KRYOS<sup>S2</sup></a>
 </div>
+
+<!-- Back to Top -->
+<button id="btt" aria-label="Back to top">↑</button>
 
 <main class="wrap">
 
@@ -365,9 +411,9 @@ const GAMES={
       {l:'Platforms',v:'5<em>systems</em>'},
       {l:'Current season',v:'S2<em>live</em>'}
     ],
-    world:'Halcyon is a wrecked orbital ring — nine stations strung across a failing magnetosphere, held together by memory and makeshift patches. You arrive on a scavenger skiff with a name the world has not heard yet, and a tooth someone left in your pocket. The world does not start. It continues.',
-    systems:'A real-time economy of <b>salvage, rumour, and weather</b>. Other players\' choices shape yours: the food you eat, the quests you find, the people who remember you. If you take a shortcut through the Orrery at dawn, everyone arriving after you will see your footprints in the frost until the sun passes.',
-    memory:'Halcyon\'s defining feature is its <b>persistent ledger</b>. When you stop playing, the world doesn\'t reset — it mourns you. NPCs write letters. Factions pass your jobs to other scavengers. Log back in six months later and find the world has continued, shaped by what you did and what you didn\'t.',
+    world:'<img src="images/lore/halcyon-world.webp" class="lore-img" alt="Halcyon World Diagram">Halcyon is a wrecked orbital ring — nine stations strung across a failing magnetosphere, held together by memory and makeshift patches. You arrive on a scavenger skiff with a name the world has not heard yet, and a tooth someone left in your pocket. The world does not start. It continues.',
+    systems:'<img src="images/lore/halcyon-systems.webp" class="lore-img" alt="Halcyon System Schematic">A real-time economy of <b>salvage, rumour, and weather</b>. Other players\' choices shape yours: the food you eat, the quests you find, the people who remember you. If you take a shortcut through the Orrery at dawn, everyone arriving after you will see your footprints in the frost until the sun passes.',
+    memory:'<img src="images/lore/halcyon-memory.webp" class="lore-img" alt="Halcyon Memory Architecture">Halcyon\'s defining feature is its <b>persistent ledger</b>. When you stop playing, the world doesn\'t reset — it mourns you. NPCs write letters. Factions pass your jobs to other scavengers. Log back in six months later and find the world has continued, shaped by what you did and what you didn\'t.',
     credits:[
       {r:'Creative Director',n:'M. Otero',b:'Formerly at 343 Industries. Shipped Halo Infinite.'},
       {r:'Lead Engineer',n:'S. Laakso',b:'Wrote the Kryos renderer. Ten years at Dice.'},
@@ -536,7 +582,7 @@ const G=GAMES[id]||GAMES.halcyon;
   addEventListener('mousemove',e=>{tx=e.clientX;ty=e.clientY;d.style.left=tx+'px';d.style.top=ty+'px'});
   function raf(){cx+=(tx-cx)*.18;cy+=(ty-cy)*.18;c.style.left=cx+'px';c.style.top=cy+'px';requestAnimationFrame(raf)}
   raf();
-  const hot='a, button, .rel-card, .cta';
+  const hot='a, button, .rel-card, .cta, .lore-img';
   document.querySelectorAll(hot).forEach(el=>{
     el.addEventListener('mouseenter',()=>c.classList.add('hot'));
     el.addEventListener('mouseleave',()=>c.classList.remove('hot'));
@@ -629,6 +675,13 @@ const G=GAMES[id]||GAMES.halcyon;
       </div>`;
     rg.appendChild(a);
   });
+  
+  const trailerBtn = document.querySelector('.cta.primary');
+  if (!['halcyon', 'blueshift', 'paraline'].includes(id)) {
+    if (trailerBtn) trailerBtn.style.display = 'none';
+    const heroArt = document.querySelector('.hero-art');
+    if (heroArt) heroArt.classList.add('cinematic-fx');
+  }
 
   /* HUD live */
   let dk=0;
@@ -641,6 +694,43 @@ const G=GAMES[id]||GAMES.halcyon;
     const d=new Date();
     document.getElementById('hud-clock').textContent=`${pad(d.getUTCHours())}:${pad(d.getUTCMinutes())}:${pad(d.getUTCSeconds())} UTC`;
   },500);
+})();
+
+/* ---- Lore Images 3D & Float Animation ---- */
+(function(){
+  const loreImgs = document.querySelectorAll('.lore-img');
+  if(!loreImgs.length) return;
+
+  loreImgs.forEach(img => {
+    img._rx = 0; img._ry = 0; img._tx = 0; img._ty = 0;
+    img._isHovered = false; img._hScale = 0;
+    
+    img.addEventListener('mouseenter', () => img._isHovered = true);
+    img.addEventListener('mousemove', e => {
+      const r = img.getBoundingClientRect();
+      img._tx = ((e.clientX - r.left) / r.width - 0.5) * 2;
+      img._ty = ((e.clientY - r.top) / r.height - 0.5) * 2;
+    });
+    img.addEventListener('mouseleave', () => {
+      img._isHovered = false; img._tx = 0; img._ty = 0;
+    });
+  });
+
+  function loop() {
+    const time = Date.now() * 0.0015;
+    loreImgs.forEach((img, i) => {
+      img._rx += (img._tx - img._rx) * 0.1;
+      img._ry += (img._ty - img._ry) * 0.1;
+      img._hScale += ((img._isHovered ? 0.06 : 0) - img._hScale) * 0.1;
+      
+      const floatY = Math.sin(time + i * 2) * 8;
+      const pulseScale = 1 + Math.sin(time * 1.5 + i) * 0.015;
+      
+      img.style.transform = `perspective(1000px) translateY(${floatY}px) rotateX(${-img._ry * 15}deg) rotateY(${img._rx * 15}deg) scale(${pulseScale + img._hScale})`;
+    });
+    requestAnimationFrame(loop);
+  }
+  loop();
 })();
 
 /* ---- Three.js bg ---- */
@@ -710,11 +800,32 @@ const G=GAMES[id]||GAMES.halcyon;
   const io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('on')})},{threshold:.15,rootMargin:'0px 0px -5% 0px'});
   document.querySelectorAll('.rev').forEach(el=>io.observe(el));
 })();
+
+/* ------------ Back to Top ------------ */
+(function(){
+  const btt=document.getElementById('btt');
+  if(!btt)return;
+  addEventListener('scroll',()=>{
+    if(window.scrollY>window.innerHeight*0.5) btt.classList.add('show');
+    else btt.classList.remove('show');
+  },{passive:true});
+  btt.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
+})();
+
+/* ------------ Navbar 3D Scroll Effect ------------ */
+(function(){
+  const tb = document.querySelector('.topbar');
+  if(!tb) return;
+  addEventListener('scroll', () => {
+    if(window.scrollY > 60) tb.classList.add('scrolled');
+    else tb.classList.remove('scrolled');
+  }, {passive: true});
+})();
 </script>
 
 <!-- Launch Trailer Cinematic Overlay -->
 <div id="trailer">
-  <div class="tr-bg" id="tr-bg"></div>
+  <video class="tr-bg" id="tr-video" playsinline preload="auto" style="object-fit: cover; width: 100%; height: 100%;"></video>
   <div class="tr-scan"></div>
   <div class="tr-vignette"></div>
   <div class="tr-glitch-bar b1" id="tr-gb1"></div>
@@ -738,7 +849,7 @@ const G=GAMES[id]||GAMES.halcyon;
 /* ---- Launch Trailer cinematic ---- */
 (function(){
   const overlay=document.getElementById('trailer');
-  const bg=document.getElementById('tr-bg');
+  const video=document.getElementById('tr-video');
   const kicker=document.getElementById('tr-kicker');
   const divider=document.getElementById('tr-divider');
   const titleEl=document.getElementById('tr-title');
@@ -751,7 +862,7 @@ const G=GAMES[id]||GAMES.halcyon;
   const fill=document.getElementById('tr-fill');
   const gbs=[document.getElementById('tr-gb1'),document.getElementById('tr-gb2'),document.getElementById('tr-gb3')];
 
-  bg.className='tr-bg '+G.art;
+  video.src = `videos/${id}-vid.mp4`; // Dynamically loads halcyon-vid.mp4, blueshift-vid.mp4, etc.
   titleEl.innerHTML=G.title;
   genreEl.textContent=G.genre;
   tagEl.textContent=G.tag;
@@ -761,9 +872,7 @@ const G=GAMES[id]||GAMES.halcyon;
   if(G.status==='LIVE')badge.classList.add('live');
   if(G.status==='ARCHIVE')badge.classList.add('archive');
 
-  const DURATION=13000;
   const items=[kicker,divider,titleEl,genreEl,badge,tagEl,yearEl,logo,skipBtn];
-  let closeTimer;
 
   function glitch(){
     gbs.forEach(b=>{b.classList.remove('flash');void b.offsetWidth;b.classList.add('flash')});
@@ -772,19 +881,21 @@ const G=GAMES[id]||GAMES.halcyon;
   function reset(){
     items.forEach(el=>el.classList.remove('s'));
     overlay.classList.remove('reveal');
-    fill.style.transition='none';
+    video.pause();
+    video.currentTime = 0;
     fill.style.width='0%';
   }
 
   function close(){
     overlay.classList.remove('on');
-    clearTimeout(closeTimer);
     setTimeout(reset,500);
   }
 
   function open(){
     reset();
     overlay.classList.add('on');
+    
+    video.play().catch(e => console.warn("Video auto-play prevented:", e));
 
     setTimeout(glitch,100);
     setTimeout(glitch,340);
@@ -803,16 +914,22 @@ const G=GAMES[id]||GAMES.halcyon;
     ];
     seq.forEach(([el,t])=>setTimeout(()=>el.classList.add('s'),t));
 
+    // Fade out text overlays after 8 seconds so the video can be watched clearly
+    setTimeout(() => { items.forEach(el => { if(el !== skipBtn) el.classList.remove('s') }) }, 8000);
+
     setTimeout(glitch,2200);
     setTimeout(glitch,3800);
-
-    requestAnimationFrame(()=>requestAnimationFrame(()=>{
-      fill.style.transition='width '+DURATION+'ms linear';
-      fill.style.width='100%';
-    }));
-
-    closeTimer=setTimeout(close,DURATION);
   }
+
+  // Dynamically sync the progress bar to the video's actual duration
+  video.addEventListener('timeupdate', () => {
+    if (video.duration) {
+      fill.style.width = (video.currentTime / video.duration * 100) + '%';
+    }
+  });
+
+  // Auto-close trailer when the video finishes
+  video.addEventListener('ended', close);
 
   document.querySelector('.cta.primary').addEventListener('click',open);
   skipBtn.addEventListener('click',close);
